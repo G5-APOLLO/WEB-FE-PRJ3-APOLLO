@@ -68,7 +68,7 @@ function ClientTable() {
           columns={columns} 
           rows={clients || []} 
           style={{height: 'auto', width: '100%'}}
-
+          getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
           classes={{
             root: 'bg-white shadow-md rounded-lg',
             columnHeader: 'bg-gray-500 text-white font-bold',
