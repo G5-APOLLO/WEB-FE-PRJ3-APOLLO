@@ -33,10 +33,11 @@ const columns: GridColDef[] = [
     renderCell: (params) => (
       <Button
         variant="contained"
-        color="secondary"
+        color={params.row.active ? "error" : "success"}
         onClick={() => handleToggleActive(params.row.id, params.row.active)}
+        className={`w-[7rem] ${params.row.active ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
       >
-        {params.row.active ? "Deactivate" : "Activate"}
+        {params.row.active ? "Desactivate" : "Activate"}
       </Button>
     ),
   },
@@ -65,8 +66,14 @@ function ClientTable() {
       <div className="w-full">
         <DataGrid 
           columns={columns} 
-          rows={clients || []}
+          rows={clients || []} 
           style={{height: 'auto', width: '100%'}}
+
+          classes={{
+            root: 'bg-white shadow-md rounded-lg',
+            columnHeader: 'bg-gray-500 text-white font-bold',
+            row: 'hover:bg-gray-100',
+          }}
         />
       </div>
     </div>
