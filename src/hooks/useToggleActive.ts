@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGetClients } from "./useGetClients";
 
+
 export const useToggleActive = (updateClientState: (id: number, state: boolean) => void) => {
     const { data: clients } = useGetClients();
     const [error, setError] = useState<string | null>(null);
@@ -26,7 +27,7 @@ export const useToggleActive = (updateClientState: (id: number, state: boolean) 
 
                 const updatedClient = await response.json();
                 console.log('Client updated successfully:', updatedClient);
-                updateClientState(id, state); // Actualiza el estado local
+                updateClientState(id, state);
             } catch (error) {
                 console.error('Error:', error);
             } finally {

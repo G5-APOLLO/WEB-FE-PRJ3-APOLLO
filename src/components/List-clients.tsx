@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetClients } from "../hooks/useGetClients";
 import { Button } from "@mui/material";
