@@ -81,7 +81,9 @@ function ClientTable() {
 
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-center text-2xl font-bold mb-5">Clients List</h1>
+      <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-black-500 to-gray-500 ">
+  CLIENT LIST
+</h1>
       <div className="w-full">
 	<DataGrid 
           columns={columns} 
