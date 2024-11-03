@@ -3,6 +3,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetClients } from "../hooks/useGetClients";
 import { Button } from "@mui/material";
 import { useToggleActive } from "../hooks/useToggleActive";
+import Spinner from "./Spinner";
+import ErrorComponent from './Error-component';
 
 function ClientTable() {
   const { data: clientsData, isError, isLoading } = useGetClients();
@@ -76,8 +78,8 @@ function ClientTable() {
     console.log(`Update client with ID: ${id}`);
   }
 
-  if (isLoading) return <p className="text-center text-blue-500">Loading...</p>;
-  if (isError || error) return <p className="text-center text-red-500">Error loading clients</p>;
+  if (isLoading) return <Spinner/>;
+  if (isError || error) return ErrorComponent({ message: error || 'Error loading clients' });
 
   return (
     <div className="container mx-auto mt-10">
