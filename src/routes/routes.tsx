@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import ClientTable  from "../components/List-clients";
-import OpportunitiesTable from "../components/ListOpportunities";
+import OpportunitiesPage from "../pages/Opportunities";
 export const router = createBrowserRouter(
   [
     {
@@ -13,7 +13,7 @@ export const router = createBrowserRouter(
     },
     {
       path: `/oportunidades`,
-      element: <OpportunitiesTable />,
+      element: <OpportunitiesPage />,
     },
   ],
 );

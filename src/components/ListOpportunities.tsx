@@ -7,9 +7,10 @@ import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
 
 interface OpportunitiesTableProps {
-    clientId?: number;
+  clientId?: number;
+  showSeguimiento?: boolean; 
 }
-function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
+function OpportunitiesTable({ clientId, showSeguimiento = false}: OpportunitiesTableProps) {
   const { data: opportunityData, isError, isLoading } = useGetOpportunities(clientId);
   const [opportunities, setOpportunities] = useState(opportunityData || []);
   
@@ -25,6 +26,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
         field: "clientIds", 
         headerName: "Clients", 
         width: 150,
+
         renderCell: (params) => {
           const clientIds = Array.isArray(params.value) ? params.value.join(', ') : params.value;
           return (
@@ -66,7 +68,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
     {
       field: "update",
       headerName: "Update",
-      width: 150,
+      width: 125,
       renderCell: () => (
         <Button
           variant="contained"
@@ -80,7 +82,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
     {
       field: "delete",
       headerName: "Delete",
-      width: 150,
+      width: 125,
       renderCell: () => (
         <Button
           variant="contained"
@@ -89,19 +91,33 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
         >
           Delete
         </Button>
-      )}
+      )
+    }, ...(showSeguimiento
+      ? [{
+          field: "seguimiento",
+          headerName: "Seguimiento",
+          hideable: false,
+          width: 150,
+          renderCell: () => (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {}}
+            >
+              Seguimiento
+            </Button>
+          ),
+        }]
+      : [])
   ];
 
   if (isLoading) return <Spinner/>;
   if (isError) return ErrorComponent({ message:'Error loading Opportunities' });
 
   return (
-    <div className="container mx-auto mt-10">
-      <h1 className="text-center md:text-6xl text-4xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
-  OPPORTUNITIES LIST
-</h1>
+    <div className="container mx-auto">
       <div className="w-full">
-	<DataGrid 
+	    <DataGrid 
           columns={columns} 
           rows={opportunities || []} 
           style={{height: 'auto', width: '100%'}}

@@ -1,5 +1,6 @@
 import React from 'react';
 import ClienteDetalleInferior from './ClienteDetalleInferior';
+import OpportunitiesTable from './ListOpportunities'; 
 
 interface ClienteDetalleProps {
     clientID: number;
@@ -18,7 +19,13 @@ const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
 
 
             {/* Renderiza la sección intermedia*/}
-
+            <div className="p-4 bg-white rounded shadow">
+            <h3 className="text-lg font-semibold">Client Opportunities:</h3>
+            <OpportunitiesTable
+                clientId={clientID}
+                showSeguimiento
+            />
+            </div>
 
             {/* Renderiza la sección inferior*/}
             <ClienteDetalleInferior
