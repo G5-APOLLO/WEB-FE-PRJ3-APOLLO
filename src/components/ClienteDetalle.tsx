@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ClienteDetalleInferior from './ClienteDetalleInferior';
 import OpportunitiesTable from './ListOpportunities'; 
 
@@ -8,10 +8,12 @@ interface ClienteDetalleProps {
 
 const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
     // Valores de prueba para la oportunidad seleccionada
-    const oportunidadIdPrueba = 1;
-    const nombreOportunidadPrueba = "Proyecto de Expansión";
-    console.log(clientID)
+    const [selectedOpportunity, setSelectedOpportunity] = useState<{ id: number; name: string } | null>(null);
 
+    const handleSeguimientoClick = (id: number, name: string) => {
+        setSelectedOpportunity({ id, name });
+      };
+    
     return (
         <div className="p-6 space-y-8 bg-gray-100 rounded-lg shadow-lg">
 
@@ -24,14 +26,17 @@ const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
             <OpportunitiesTable
                 clientId={clientID}
                 showSeguimiento
+                onSeguimientoClick={handleSeguimientoClick}
             />
             </div>
 
             {/* Renderiza la sección inferior*/}
-            <ClienteDetalleInferior
-                oportunidadId={oportunidadIdPrueba}
-                nombreOportunidad={nombreOportunidadPrueba}
+            {selectedOpportunity && (
+                <ClienteDetalleInferior
+                oportunidadId={selectedOpportunity.id}
+                nombreOportunidad={selectedOpportunity.name}
             />
+         )}
         </div>
     );
 };

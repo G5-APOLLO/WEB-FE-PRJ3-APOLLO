@@ -8,9 +8,11 @@ import { formatCurrency } from '../utils/formatCurrency';
 
 interface OpportunitiesTableProps {
   clientId?: number;
-  showSeguimiento?: boolean; 
+  showSeguimiento?: boolean;
+  onSeguimientoClick?: (id: number, name: string) => void; // Pass both id and name
 }
-function OpportunitiesTable({ clientId, showSeguimiento = false}: OpportunitiesTableProps) {
+
+function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoClick }: OpportunitiesTableProps) {
   const { data: opportunityData, isError, isLoading } = useGetOpportunities(clientId);
   const [opportunities, setOpportunities] = useState(opportunityData || []);
   
@@ -98,11 +100,11 @@ function OpportunitiesTable({ clientId, showSeguimiento = false}: OpportunitiesT
           headerName: "Seguimiento",
           hideable: false,
           width: 150,
-          renderCell: () => (
+          renderCell: (params: any ) => (
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {}}
+              onClick={() => onSeguimientoClick && onSeguimientoClick(params.row.id, params.row.businessName)}
             >
               Seguimiento
             </Button>
