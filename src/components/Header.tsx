@@ -25,7 +25,7 @@ const Header = () => {
         <div className="flex items-center space-x-4 ">
           <span className="text-gray-300 text-xl">Admin</span>
           <img
-            src="https://raw.githubusercontent.com/G5-APOLLO/WEB-FE-PRJ3-APOLLO/refs/heads/main/public/assets/user-svgrepo-com.svg?token=GHSAT0AAAAAACZW3VACTWXDVPDMOIPZQPTIZZIEDKQ" 
+            src= '/assets/user-svgrepo-com.svg'
             alt="User Avatar"
             className="w-10 h-10 rounded-full border-2 border-gray-400"
           />
