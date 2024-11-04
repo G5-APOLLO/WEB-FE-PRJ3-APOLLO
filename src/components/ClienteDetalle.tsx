@@ -1,11 +1,11 @@
 import React from 'react';
 import ClienteDetalleInferior from './ClienteDetalleInferior';
 
-interface ClienteDetalleProps {
-    clientID: number;
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ClienteDetalle: React.FC<ClienteDetalleProps> = ({ clientID }) => {
+// interface ClienteDetalleProps {
+//     clientID: number;
+// }
+
+const ClienteDetalle: React.FC/*<ClienteDetalleProps>*/ = () => {
     // Valores de prueba para la oportunidad seleccionada
     const oportunidadIdPrueba = 1;
     const nombreOportunidadPrueba = "Proyecto de Expansión";
