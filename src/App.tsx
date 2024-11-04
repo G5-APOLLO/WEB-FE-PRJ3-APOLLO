@@ -3,7 +3,7 @@ import { router } from "./routes/routes";
 import Header from "./components/Header";
 import './App.css'
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="app">
     <Header />
