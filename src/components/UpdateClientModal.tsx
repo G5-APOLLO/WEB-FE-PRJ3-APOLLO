@@ -70,7 +70,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle className="text-center text-2xl font-bold">Actualizar Cliente</DialogTitle>
+      <DialogTitle className="text-center text-2xl font-bold">Update Client</DialogTitle>
       <DialogContent dividers>
         {loading ? (
           <Spinner />
