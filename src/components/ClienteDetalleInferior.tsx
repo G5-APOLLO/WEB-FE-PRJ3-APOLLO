@@ -1,5 +1,7 @@
 import React from 'react';
 import { useActividadesSeguimiento } from '../hooks/useActivity';
+import Spinner from './Spinner';
+import ErrorComponent from './Error-component';
 
 interface Actividad {
     id: number;
@@ -15,8 +17,8 @@ interface ClienteDetalleInferiorProps {
 const ClienteDetalleInferior: React.FC<ClienteDetalleInferiorProps> = ({ oportunidadId, nombreOportunidad }) => {
     const { data: actividades, isLoading, isError } = useActividadesSeguimiento(oportunidadId);
 
-    if (isLoading) return <p>Cargando actividades de seguimiento...</p>;
-    if (isError) return <p>Error al cargar actividades</p>;
+    if (isLoading) return <Spinner />;
+    if (isError) return <ErrorComponent message='Error al cargar actividades'/>;
 
     return (
         <div className="p-4 bg-white rounded shadow">
