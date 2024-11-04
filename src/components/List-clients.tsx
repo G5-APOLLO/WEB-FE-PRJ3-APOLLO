@@ -8,6 +8,7 @@ import CreateClientModal from './CreateClientModal';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import CloseIcon from '@mui/icons-material/Close';
+import { ListClietnType } from '../types/ListClient.type';
 
 function ClientTable() {
   const { data: clientsData, isError, isLoading } = useGetClients();
@@ -54,7 +55,7 @@ function ClientTable() {
     setOpenCreateModal(false);
   };
 
-  const handleClientCreated = (newClient: Client) => {
+  const handleClientCreated = (newClient: ListClietnType) => {
     setClients([...clients, newClient]);
   };
 
