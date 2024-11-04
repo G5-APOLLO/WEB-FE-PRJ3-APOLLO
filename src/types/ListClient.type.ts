@@ -1,5 +1,5 @@
 export type ListClietnType = {
-    id: number;
+    id: number | null;
     nit: string;
     name: string;
     address: string;
