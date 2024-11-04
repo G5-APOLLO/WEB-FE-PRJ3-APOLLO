@@ -145,7 +145,7 @@ function ClientTable() {
             <CloseIcon />
           </IconButton>
 
-          <ClienteDetalle  />
+          <ClienteDetalle clientID={selectedClientId!}  />
         </Box>
       </Modal>
     </div>
