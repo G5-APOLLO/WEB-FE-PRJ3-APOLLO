@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
-import { Button } from "@mui/material";
 import { useToggleActive } from "../hooks/useToggleActive";
+import ClienteDetalle from './ClienteDetalle'; // Importa el componente de detalles del cliente
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
+import CloseIcon from '@mui/icons-material/Close';
 
 function ClientTable() {
   const { data: clientsData, isError, isLoading } = useGetClients();
   const [clients, setClients] = useState(clientsData || []);
-  
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+
   useEffect(() => {
     if (clientsData) {
       setClients(clientsData);
@@ -30,10 +34,25 @@ function ClientTable() {
     await toggleActive(id, state);
   };
 
+  const handleNameClick = (id: number) => {
+    setSelectedClientId(id);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedClientId(null);
+  };
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "nit", headerName: "NIT", width: 150 },
-    { field: "name", headerName: "Name", width: 200 },
+    { field: "name", headerName: "Name", width: 200, renderCell: (params) => (
+        <Button color="primary" onClick={() => handleNameClick(params.row.id)}>
+          {params.row.name}
+        </Button>
+      ),
+    },
     { field: "address", headerName: "Address", width: 250 },
     { field: "city", headerName: "City", width: 150 },
     { field: "country", headerName: "Country", width: 150 },
@@ -85,10 +104,10 @@ function ClientTable() {
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
-  CLIENT LIST
-</h1>
+        CLIENT LIST
+      </h1>
       <div className="w-full">
-	<DataGrid 
+        <DataGrid 
           columns={columns} 
           rows={clients || []} 
           style={{height: 'auto', width: '100%'}}
@@ -100,6 +119,35 @@ function ClientTable() {
           }}
         />
       </div>
+
+      {/* Modal para el detalle del cliente */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            width: '80%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+          }}
+        >
+          {/* Botón de Cerrar */}
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{ position: 'absolute', top: 8, right: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <ClienteDetalle  />
+        </Box>
+      </Modal>
     </div>
   );
 }
