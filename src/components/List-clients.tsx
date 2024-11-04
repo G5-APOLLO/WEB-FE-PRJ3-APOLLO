@@ -59,6 +59,7 @@ function ClientTable() {
       field: "toggleActive",
       headerName: "Activate/Deactivate",
       width: 150,
+      hideable: false,
       renderCell: (params) => (
         <Button
           variant="contained"
@@ -83,7 +84,7 @@ function ClientTable() {
 
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-black-500 to-gray-500 ">
+      <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
   CLIENT LIST
 </h1>
       <div className="w-full">
@@ -94,7 +95,7 @@ function ClientTable() {
           getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
           classes={{
             root: 'bg-white shadow-md rounded-lg',
-            columnHeader: 'bg-gray-500 text-white font-bold',
+            columnHeader: 'bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-lg border-b border-gray-700',
             row: 'hover:bg-gray-100',
           }}
         />
