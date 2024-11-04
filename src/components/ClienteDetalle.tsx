@@ -1,14 +1,15 @@
 import React from 'react';
 import ClienteDetalleInferior from './ClienteDetalleInferior';
 
-// interface ClienteDetalleProps {
-//     clientID: number;
-// }
+interface ClienteDetalleProps {
+    clientID: number;
+}
 
-const ClienteDetalle: React.FC/*<ClienteDetalleProps>*/ = () => {
+const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
     // Valores de prueba para la oportunidad seleccionada
     const oportunidadIdPrueba = 1;
     const nombreOportunidadPrueba = "Proyecto de Expansión";
+    console.log(clientID)
 
     return (
         <div className="p-6 space-y-8 bg-gray-100 rounded-lg shadow-lg">

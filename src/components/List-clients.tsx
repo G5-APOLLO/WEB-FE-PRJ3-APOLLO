@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Modal, Box, IconButton } from "@mui/material";
@@ -146,7 +145,7 @@ function ClientTable() {
             <CloseIcon />
           </IconButton>
 
-          <ClienteDetalle /*clientID={selectedClientId!}*/  />
+          <ClienteDetalle clientID={selectedClientId!}  />
         </Box>
       </Modal>
     </div>
