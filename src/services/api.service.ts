@@ -1,4 +1,4 @@
-export const BASE_URL = "https://web-fe-prj3-api-apollo.onrender.com";
+export const BASE_URL = "http://localhost:3000";
 
 export const fetcher = async (endpoint: string, options: RequestInit = {}) => {
   const isFormData = options.body instanceof FormData;
