@@ -95,7 +95,7 @@ function ClientTable() {
           getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
           classes={{
             root: 'bg-white shadow-md rounded-lg',
-            columnHeader: 'bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-lg border-b border-gray-700',
+            columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
             row: 'hover:bg-gray-100',
           }}
         />
