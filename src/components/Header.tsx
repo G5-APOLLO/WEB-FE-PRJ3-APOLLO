@@ -7,10 +7,10 @@ const Header = () => {
         
 
         <nav className="flex space-x-14 text-sm font-semibold text-xl">
-          <a href="#clientes" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+          <a href="clientes" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaUsers className="mr-2" /> Clients
           </a>
-          <a href="#oportunidades" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+          <a href="oportunidades" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaChartLine className="mr-2" /> Opportunities
           </a>
           <a href="#seguimiento" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">

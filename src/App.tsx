@@ -1,15 +1,14 @@
-import OpportunitiesTable from './components/ListOpportunities'
-import Header from './components/Header'
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/routes"; 
+import Header from "./components/Header";
 import './App.css'
 
-
 function App() {
-
   return (
-    <>
-      <Header/>
-      <OpportunitiesTable/>
-    </>
+    <div className="app">
+    <Header />
+    <RouterProvider router={router} />
+  </div>
   )
 }
 
