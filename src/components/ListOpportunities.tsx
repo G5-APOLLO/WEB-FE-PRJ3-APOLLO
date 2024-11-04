@@ -6,8 +6,11 @@ import ErrorComponent from './Error-component';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
 
-function OpportunitiesTable() {
-  const { data: opportunityData, isError, isLoading } = useGetOpportunities();
+interface OpportunitiesTableProps {
+    clientId?: number;
+}
+function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
+  const { data: opportunityData, isError, isLoading } = useGetOpportunities(clientId);
   const [opportunities, setOpportunities] = useState(opportunityData || []);
   
   useEffect(() => {
