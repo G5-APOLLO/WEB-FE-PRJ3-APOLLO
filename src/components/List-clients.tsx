@@ -9,13 +9,15 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import CloseIcon from '@mui/icons-material/Close';
 import { ListClietnType } from '../types/ListClient.type';
+import UpdateClientModal from './UpdateClientModal';
 
 function ClientTable() {
   const { data: clientsData, isError, isLoading } = useGetClients();
   const [clients, setClients] = useState(clientsData || []);
   const [openModal, setOpenModal] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
-  const [openCreateModal, setOpenCreateModal] = useState(false); // Estado para el modal de creación
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // Estado para el modal de actualización
 
   useEffect(() => {
     if (clientsData) {
@@ -59,6 +61,24 @@ function ClientTable() {
     setClients([...clients, newClient]);
   };
 
+  const handleOpenUpdateModal = (id: number) => {
+    setSelectedClientId(id);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setOpenUpdateModal(false);
+    setSelectedClientId(null);
+  };
+
+  const handleClientUpdated = (updatedClient: ListClietnType) => {
+    setClients((prevClients) =>
+      prevClients.map((client) =>
+        client.id === updatedClient.id ? updatedClient : client
+      )
+    );
+  };
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "nit", headerName: "NIT", width: 150 },
@@ -83,8 +103,7 @@ function ClientTable() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleUpdate(params.row.id)}
-          disabled={!params.row.active}
+          onClick={() => handleOpenUpdateModal(params.row.id)}
         >
           Update
         </Button>
@@ -106,10 +125,6 @@ function ClientTable() {
     },
   ];
 
-  function handleUpdate(id: string) {
-    console.log(`Update client with ID: ${id}`);
-  }
-
   if (isLoading) return <Spinner />;
   if (isError || error) return <ErrorComponent message={error || 'Error loading clients'} />;
 
@@ -123,7 +138,6 @@ function ClientTable() {
         New Client
       </Button>
 
-
       <div className="w-full">
         <DataGrid
           columns={columns}
@@ -133,7 +147,6 @@ function ClientTable() {
         />
       </div>
 
-      {/* Modal para el detalle del cliente */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -156,10 +169,18 @@ function ClientTable() {
           <ClienteDetalle clientID={selectedClientId!} />
         </Box>
       </Modal>
+
       <CreateClientModal
         open={openCreateModal}
         onClose={handleCloseCreateModal}
         onClientCreated={handleClientCreated}
+      />
+
+      <UpdateClientModal
+        open={openUpdateModal}
+        onClose={handleCloseUpdateModal}
+        clientId={selectedClientId!}
+        onClientUpdated={handleClientUpdated}
       />
     </div>
   );

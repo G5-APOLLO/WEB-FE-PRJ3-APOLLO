@@ -19,24 +19,8 @@ export const createClient = async (client: ListClietnType) => {
   return response.json();
 };
 
-// Nueva función para obtener la lista de clientes
-export const fetchClients = async (): Promise<ListClietnType[]> => {
-    const response = await fetch(`${API_URL}/clients`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  
-    if (!response.ok) {
-      throw new Error('Error al obtener los clientes');
-    }
-  
-    return response.json();
-  };
-
 // Función para obtener un cliente específico por ID (NIT en este caso)
-export const fetchClientById = async (id: string): Promise<ListClietnType> => {
+export const fetchClientById = async (id: number): Promise<ListClietnType> => {
     const response = await fetch(`${API_URL}/clients/${id}`, {
       method: 'GET',
       headers: {
