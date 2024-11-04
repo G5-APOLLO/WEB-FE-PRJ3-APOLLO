@@ -41,7 +41,7 @@ type CreateClientModalProps = {
   
     const handleCreateClient = async () => {
       if (!isFormValid) {
-        alert('Por favor, complete todos los campos obligatorios');
+        alert('Please complete all required fields');
         return;
       }
   
@@ -58,7 +58,7 @@ type CreateClientModalProps = {
   
     return (
       <Dialog open={open} onClose={() => { setClient(initialClientState); onClose(); }} fullWidth maxWidth="sm">
-        <DialogTitle className="text-center text-2xl font-bold">Crear Cliente</DialogTitle>
+        <DialogTitle className="text-center text-2xl font-bold">New Client</DialogTitle>
         <DialogContent dividers>
           <ClientForm client={client} onChange={handleClientChange} />
         </DialogContent>
