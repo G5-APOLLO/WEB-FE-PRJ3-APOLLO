@@ -67,7 +67,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
       field: "update",
       headerName: "Update",
       width: 150,
-      renderCell: (params) => (
+      renderCell: () => (
         <Button
           variant="contained"
           color="primary"
@@ -81,7 +81,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
       field: "delete",
       headerName: "Delete",
       width: 150,
-      renderCell: (params) => (
+      renderCell: () => (
         <Button
           variant="contained"
           color="error"
@@ -97,7 +97,7 @@ function OpportunitiesTable({ clientId }: OpportunitiesTableProps) {
 
   return (
     <div className="container mx-auto mt-10">
-      <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
+      <h1 className="text-center md:text-6xl text-4xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
   OPPORTUNITIES LIST
 </h1>
       <div className="w-full">
