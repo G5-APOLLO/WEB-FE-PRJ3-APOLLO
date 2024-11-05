@@ -104,6 +104,7 @@ function ClientTable() {
           variant="contained"
           color="primary"
           onClick={() => handleOpenUpdateModal(params.row.id)}
+          disabled={!params.row.active}
         >
           Update
         </Button>
