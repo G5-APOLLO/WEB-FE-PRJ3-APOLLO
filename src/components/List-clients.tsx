@@ -3,16 +3,21 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
-import ClienteDetalle from './ClienteDetalle'; // Importa el componente de detalles del cliente
+import ClienteDetalle from './ClienteDetalle';
+import CreateClientModal from './CreateClientModal';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import CloseIcon from '@mui/icons-material/Close';
+import { ListClietnType } from '../types/ListClient.type';
+import UpdateClientModal from './UpdateClientModal';
 
 function ClientTable() {
   const { data: clientsData, isError, isLoading } = useGetClients();
   const [clients, setClients] = useState(clientsData || []);
   const [openModal, setOpenModal] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // Estado para el modal de actualización
 
   useEffect(() => {
     if (clientsData) {
@@ -44,10 +49,41 @@ function ClientTable() {
     setSelectedClientId(null);
   };
 
+  const handleOpenCreateModal = () => {
+    setOpenCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
+  };
+
+  const handleClientCreated = (newClient: ListClietnType) => {
+    setClients([...clients, newClient]);
+  };
+
+  const handleOpenUpdateModal = (id: number) => {
+    setSelectedClientId(id);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setOpenUpdateModal(false);
+    setSelectedClientId(null);
+  };
+
+  const handleClientUpdated = (updatedClient: ListClietnType) => {
+    setClients((prevClients) =>
+      prevClients.map((client) =>
+        client.id === updatedClient.id ? updatedClient : client
+      )
+    );
+  };
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
     { field: "nit", headerName: "NIT", width: 150 },
-    { field: "name", headerName: "Name", width: 200, renderCell: (params) => (
+    {
+      field: "name", headerName: "Name", width: 200, renderCell: (params) => (
         <Button color="primary" onClick={() => handleNameClick(params.row.id)}>
           {params.row.name}
         </Button>
@@ -67,7 +103,7 @@ function ClientTable() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleUpdate(params.row.id)}
+          onClick={() => handleOpenUpdateModal(params.row.id)}
           disabled={!params.row.active}
         >
           Update
@@ -78,49 +114,40 @@ function ClientTable() {
       field: "toggleActive",
       headerName: "Activate/Deactivate",
       width: 150,
-      hideable: false,
       renderCell: (params) => (
         <Button
           variant="contained"
           color={params.row.active ? "error" : "success"}
-          onClick={async () => {
-            handleToggle(params.row.id, !params.row.active);
-          }}
-          className={`w-[7rem] ${params.row.active ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
+          onClick={() => handleToggle(params.row.id, !params.row.active)}
         >
-          {params.row.active ? "Deactivate" : "Activate"}
+          {params.row.active ? "Desactivate" : "Activate"}
         </Button>
       ),
     },
   ];
 
-  function handleUpdate(id: string) {
-    console.log(`Update client with ID: ${id}`);
-  }
-
-  if (isLoading) return <Spinner/>;
-  if (isError || error) return ErrorComponent({ message: error || 'Error loading clients' });
+  if (isLoading) return <Spinner />;
+  if (isError || error) return <ErrorComponent message={error || 'Error loading clients'} />;
 
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
         CLIENT LIST
       </h1>
+
+      <Button variant="contained" color="primary" onClick={handleOpenCreateModal} className="mb-8">
+        New Client
+      </Button>
+
       <div className="w-full">
-        <DataGrid 
-          columns={columns} 
-          rows={clients || []} 
-          style={{height: 'auto', width: '100%'}}
+        <DataGrid
+          columns={columns}
+          rows={clients || []}
+          style={{ height: 'auto', width: '100%' }}
           getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
-          classes={{
-            root: 'bg-white shadow-md rounded-lg',
-            columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
-            row: 'hover:bg-gray-100',
-          }}
         />
       </div>
 
-      {/* Modal para el detalle del cliente */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -137,17 +164,25 @@ function ClientTable() {
             overflowY: 'auto',
           }}
         >
-          {/* Botón de Cerrar */}
-          <IconButton
-            onClick={handleCloseModal}
-            sx={{ position: 'absolute', top: 8, right: 8 }}
-          >
+          <IconButton onClick={handleCloseModal} sx={{ position: 'absolute', top: 8, right: 8 }}>
             <CloseIcon />
           </IconButton>
-
-          <ClienteDetalle clientID={selectedClientId!}  />
+          <ClienteDetalle clientID={selectedClientId!} />
         </Box>
       </Modal>
+
+      <CreateClientModal
+        open={openCreateModal}
+        onClose={handleCloseCreateModal}
+        onClientCreated={handleClientCreated}
+      />
+
+      <UpdateClientModal
+        open={openUpdateModal}
+        onClose={handleCloseUpdateModal}
+        clientId={selectedClientId!}
+        onClientUpdated={handleClientUpdated}
+      />
     </div>
   );
 }
