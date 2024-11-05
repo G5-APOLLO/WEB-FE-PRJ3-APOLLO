@@ -146,6 +146,11 @@ function ClientTable() {
           rows={clients || []}
           style={{ height: 'auto', width: '100%' }}
           getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
+          classes={{
+            root: 'bg-white shadow-md rounded-lg',
+            columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
+            row: 'hover:bg-gray-100',
+          }}
         />
       </div>
 
