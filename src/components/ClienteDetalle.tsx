@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ClienteDetalleInferior from './ClienteDetalleInferior';
 import OpportunitiesTable from './ListOpportunities'; 
+import ClienteDetalleSuperior from './ClienteDetalleSuperior';
 
 interface ClienteDetalleProps {
     clientID: number;
@@ -18,6 +19,7 @@ const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
         <div className="p-6 space-y-8 bg-gray-100 rounded-lg shadow-lg">
 
             {/* Renderiza la sección superior*/}
+            <ClienteDetalleSuperior clientId={clientID} />
 
 
             {/* Renderiza la sección intermedia*/}
