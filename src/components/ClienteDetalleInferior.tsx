@@ -22,12 +22,12 @@ const ClienteDetalleInferior: React.FC<ClienteDetalleInferiorProps> = ({ oportun
 
     return (
         <div className="p-4 bg-white rounded shadow">
-            <h3 className="text-lg font-semibold mb-4">Actividades de Seguimiento para: {nombreOportunidad}</h3>
+            <h3 className="text-lg font-semibold mb-4">Follow-up Activities for: {nombreOportunidad}</h3>
             <table className="min-w-full text-sm text-left border-collapse">
                 <thead>
                     <tr>
-                        <th className="px-4 py-2 border">Fecha</th>
-                        <th className="px-4 py-2 border">Descripción</th>
+                        <th className="px-4 py-2 border">Date</th>
+                        <th className="px-4 py-2 border">Description</th>
                     </tr>
                 </thead>
                 <tbody>
