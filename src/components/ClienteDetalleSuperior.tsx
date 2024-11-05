@@ -50,7 +50,7 @@ const ClienteDetalleSuperior: React.FC<ClienteDetalleSuperiorProps> = ({ clientI
         <div className="flex justify-between">
           <p className="text-base font-medium text-gray-700"><strong>State:</strong></p>
           <p className={`text-base ${client.active ? 'text-green-500' : 'text-red-500'}`}>
-            {client.active ? 'Activo' : 'Inactivo'}
+            {client.active ? 'Active' : 'Inactive'}
           </p>
         </div>
       </div>
