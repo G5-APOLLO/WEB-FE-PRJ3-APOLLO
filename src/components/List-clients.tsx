@@ -119,6 +119,7 @@ function ClientTable() {
           variant="contained"
           color={params.row.active ? "error" : "success"}
           onClick={() => handleToggle(params.row.id, !params.row.active)}
+          className='w-[7rem]'
         >
           {params.row.active ? "Desactivate" : "Activate"}
         </Button>
