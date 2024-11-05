@@ -96,8 +96,8 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
       )
     }, ...(showSeguimiento
       ? [{
-          field: "seguimiento",
-          headerName: "Seguimiento",
+          field: "Tracking",
+          headerName: "Tracking",
           hideable: false,
           width: 150,
           renderCell: (params: any ) => (
@@ -106,7 +106,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
               color="primary"
               onClick={() => onSeguimientoClick && onSeguimientoClick(params.row.id, params.row.businessName)}
             >
-              Seguimiento
+              Tracking
             </Button>
           ),
         }]
