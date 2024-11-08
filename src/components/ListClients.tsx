@@ -166,7 +166,7 @@ function ClientTable() {
     paginationModel={paginationModel}
     onPaginationModelChange={(model) => {
       setPaginationModel({ ...model, page: 1 });
-      setPageSize(model.pageSize);
+      setPageSize(pageSize);
     }}
     classes={{
       root: 'bg-white shadow-md rounded-lg',
