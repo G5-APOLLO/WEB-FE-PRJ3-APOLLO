@@ -1,4 +1,4 @@
-// components/UpdateClientModal.tsx
+
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
