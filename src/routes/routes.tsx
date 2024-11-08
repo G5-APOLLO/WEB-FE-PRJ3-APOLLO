@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import ClientTable  from "../components/List-clients";
+import ClientTable  from "../components/ListClients";
 import OpportunitiesPage from "../pages/Opportunities";
 export const router = createBrowserRouter(
   [
