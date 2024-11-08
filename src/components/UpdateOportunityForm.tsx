@@ -12,8 +12,9 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
     const { name, value } = e.target;
     onChange({ ...opportunity, [name]: name === 'estimatedValue' ? Number(value) : value });
   };
-
+  
   return (
+    
     <form>
       <TextField
         label="Business Name"
@@ -31,8 +32,14 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
+        select
         required={true}
-      />
+      >
+        <MenuItem value="Outsourcing Resource">Outsourcing Resource</MenuItem>
+        <MenuItem value="Web Development">Web Development</MenuItem>
+        <MenuItem value="Mobile Development">Mobile Development</MenuItem>
+        <MenuItem value="IT Consulting">IT Consulting</MenuItem>
+      </TextField>
       <TextField
         label="Description"
         name="description"

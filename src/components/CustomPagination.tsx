@@ -13,7 +13,7 @@ interface CustomPaginationProps {
 }
 
 const CustomPagination: React.FC<CustomPaginationProps> = ({ paginationModel, setPaginationModel, totalPages }) => {
-  const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
     setPaginationModel((prevModel: PaginationModel) => ({
       ...prevModel,
       page: newPage - 1, 

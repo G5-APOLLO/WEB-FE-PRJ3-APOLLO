@@ -20,7 +20,7 @@ function ClientTable() {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState(10);
 
 
   useEffect(() => {
