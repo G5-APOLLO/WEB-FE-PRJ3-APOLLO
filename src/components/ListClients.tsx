@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomPagination from './CustomPagination';
 import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from "@mui/x-data-grid";
 import { Select, MenuItem,Button, Modal, Box, IconButton } from "@mui/material";
@@ -136,6 +136,11 @@ function ClientTable() {
   if (isLoading) return <Spinner />;
   if (isError || error) return <ErrorComponent message={error || 'Error loading clients'} />;
 
+  const ListClients = () => {
+    const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 10 });
+    const totalPages = Math.ceil((clients?.length || 0) / paginationModel.pageSize);
+  }
+
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
@@ -146,25 +151,34 @@ function ClientTable() {
         New Client
       </Button>
 
-      <div className="w-full h-[40rem] overflow-y-auto">
-      <DataGrid
-        columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
-        rows={clients || []}
-        style={{ height: '100%', width: '100%' }}
-        paginationModel={paginationModel}
-        getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
-        onPaginationModelChange={(model) => setPaginationModel(model)}
-        slots={{
-          pagination: () => <CustomPagination paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalPages={totalPages} />,
-        }}
-        classes={{
-          root: 'bg-white shadow-md rounded-lg',
-          columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
-          row: 'hover:bg-gray-100',
-        }}
-      />
-    </div>
 
+      <div className="w-full h-[40rem] overflow-y-auto">
+  <DataGrid
+    columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
+    rows={clients || []}
+    style={{ height: '100%', width: '100%' }}
+    slots={{
+      pagination: () => (
+        <CustomPagination 
+          paginationModel={paginationModel} 
+          setPaginationModel={setPaginationModel} 
+          totalPages={totalPages} 
+        />
+      ),
+    }}
+    pageSizeOptions={[10, 20, 50, 100]}
+    paginationModel={paginationModel}
+    onPaginationModelChange={(model) => {
+      setPaginationModel(model);
+      setPageSize(model.pageSize);
+    }}
+    classes={{
+      root: 'bg-white shadow-md rounded-lg',
+      columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
+      row: 'hover:bg-gray-100',
+    }}
+  />
+</div>
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{

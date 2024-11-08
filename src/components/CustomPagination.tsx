@@ -1,25 +1,52 @@
 import React from 'react';
 import { Pagination } from '@mui/material';
 
-type CustomPaginationProps = {
-  paginationModel: { pageSize: number; page: number };
-  setPaginationModel: (model: { pageSize: number; page: number }) => void;
+interface PaginationModel {
+  page: number;
+  pageSize: number;
+}
+
+interface CustomPaginationProps {
+  paginationModel: PaginationModel;
+  setPaginationModel: React.Dispatch<React.SetStateAction<PaginationModel>>;
   totalPages: number;
-};
+}
 
 const CustomPagination: React.FC<CustomPaginationProps> = ({ paginationModel, setPaginationModel, totalPages }) => {
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPaginationModel({ ...paginationModel, page: value - 1 });
+  const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPaginationModel((prevModel) => ({
+      ...prevModel,
+      page: newPage,
+    }));
+  };
+
+  const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPaginationModel((prevModel) => ({
+      ...prevModel,
+      pageSize: parseInt(event.target.value, 10),
+    }));
   };
 
   return (
-    <Pagination
+    <div className="flex items-center justify-between p-2">
+      <select
+        value={paginationModel.pageSize}
+        onChange={handlePageSizeChange}
+        className="p-2 border border-gray-300 rounded-md"
+      >
+        {[10, 20, 50, 100].map((size) => (
+          <option key={size} value={size}>
+            {size} rows
+          </option>
+        ))}
+      </select>
+      <Pagination
         count={totalPages}
-        page={paginationModel.page + 1}
-        onChange={handleChange}
-        sx={{ bgcolor: 'white'}}
-        shape="rounded"
-    />
+        page={paginationModel.page}
+        onChange={handlePageChange}
+        className="ml-auto"
+      />
+    </div>
   );
 };
 
