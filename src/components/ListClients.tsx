@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { Button, Modal, Box, IconButton } from "@mui/material";
+import CustomPagination from './CustomPagination';
+import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from "@mui/x-data-grid";
+import { Select, MenuItem,Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
 import ClienteDetalle from './ClienteDetalle';
@@ -19,6 +20,8 @@ function ClientTable() {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
     if (clientsData) {
@@ -79,6 +82,8 @@ function ClientTable() {
       )
     );
   };
+
+  const totalPages = Math.ceil(clients.length / pageSize);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
@@ -143,14 +148,14 @@ function ClientTable() {
 
       <div className="w-full h-[40rem] overflow-y-auto">
       <DataGrid
-        columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })}
+        columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
         rows={clients || []}
         style={{ height: '100%', width: '100%' }}
-        getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
-        pagination
         paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[10, 25, 50]}
+        onPaginationModelChange={(model) => setPaginationModel(model)}
+        slots={{
+          pagination: () => <CustomPagination paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalPages={totalPages} />,
+        }}
         classes={{
           root: 'bg-white shadow-md rounded-lg',
           columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
