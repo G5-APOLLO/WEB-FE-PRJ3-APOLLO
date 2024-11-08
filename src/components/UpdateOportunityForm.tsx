@@ -22,6 +22,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
+        required={true}
       />
       <TextField
         label="Business Line"
@@ -30,6 +31,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
+        required={true}
       />
       <TextField
         label="Description"
@@ -38,6 +40,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
+        required={true}
       />
       <TextField
         label="Estimated Value"
@@ -47,6 +50,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         fullWidth
         margin="normal"
         type="number"
+        required={true}
       />
       <TextField
         label="Estimated Date"
@@ -57,6 +61,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         margin="normal"
         type="date"
         InputLabelProps={{ shrink: true }}
+        required={true}
       />
       <TextField
         label="Status"
@@ -66,6 +71,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         fullWidth
         margin="normal"
         select
+        required={true}
       >
         <MenuItem value="Open">Open</MenuItem>
         <MenuItem value="In Study">In Study</MenuItem>
