@@ -1,9 +1,9 @@
 // services/clientService.ts
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 
 const API_URL = 'https://web-fe-prj3-api-apollo.onrender.com';
 
-export const createClient = async (client: ListClietnType) => {
+export const createClient = async (client: ListClientType) => {
   const response = await fetch(`${API_URL}/clients`, {
     method: 'POST',
     headers: {
@@ -20,7 +20,7 @@ export const createClient = async (client: ListClietnType) => {
 };
 
 // Función para obtener un cliente específico por ID (NIT en este caso)
-export const fetchClientById = async (id: number): Promise<ListClietnType> => {
+export const fetchClientById = async (id: number): Promise<ListClientType> => {
     const response = await fetch(`${API_URL}/clients/${id}`, {
       method: 'GET',
       headers: {
@@ -36,7 +36,7 @@ export const fetchClientById = async (id: number): Promise<ListClietnType> => {
   };
 
 // Función para actualizar un cliente
-export const updateClient = async (client: ListClietnType): Promise<ListClietnType> => {
+export const updateClient = async (client: ListClientType): Promise<ListClientType> => {
   const response = await fetch(`${API_URL}/clients/${client.id}`, {
     method: 'PUT',
     headers: {

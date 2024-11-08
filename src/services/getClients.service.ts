@@ -1,6 +1,6 @@
 import { fetcher } from "./api.service";
-import { ListClietnType } from "../types/ListClient.type";
+import { ListClientType } from "../types/ListClient.type";
 
-export const useGetclients = async (): Promise<ListClietnType[]> => {
+export const useGetclients = async (): Promise<ListClientType[]> => {
     return fetcher("/clients");
 };

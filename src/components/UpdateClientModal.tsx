@@ -5,17 +5,17 @@ import ClientForm from './ClientForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchClientById, updateClient } from '../services/createClient.service';
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 
 type UpdateClientModalProps = {
   open: boolean;
   onClose: () => void;
   clientId: number;
-  onClientUpdated: (client: ListClietnType) => void;
+  onClientUpdated: (client: ListClientType) => void;
 };
 
 const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, clientId, onClientUpdated }) => {
-  const [client, setClient] = useState<ListClietnType | null>(null);
+  const [client, setClient] = useState<ListClientType | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
       setLoading(true);
       setError(null);
       try {
-        const clientData: ListClietnType = await fetchClientById(clientId);
+        const clientData: ListClientType = await fetchClientById(clientId);
         setClient(clientData);
       } catch (error) {
         setError('Error loading client data'); 
@@ -46,7 +46,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
     setIsFormValid(validateForm());
   }, [client]);
 
-  const handleClientChange = (updatedClient: ListClietnType) => {
+  const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
   };
 
