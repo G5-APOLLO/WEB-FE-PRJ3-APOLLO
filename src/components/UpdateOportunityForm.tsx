@@ -35,7 +35,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         select
         required={true}
       >
-        <MenuItem value="Outsourcing Resource">Outsourcing Resource</MenuItem>
+        <MenuItem value="Outsourcing Resources">Outsourcing Resources</MenuItem>
         <MenuItem value="Web Development">Web Development</MenuItem>
         <MenuItem value="Mobile Development">Mobile Development</MenuItem>
         <MenuItem value="IT Consulting">IT Consulting</MenuItem>
