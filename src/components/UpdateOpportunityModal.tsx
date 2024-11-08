@@ -5,20 +5,16 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchOpportunityById, updateOpportunity } from '../services/oportunity.service';
 import { IOpportunity } from '../types/ListOpportunity.type';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 type UpdateOpportunityModalProps = {
-
   open: boolean;
-
   onClose: () => void;
-
   opportunityId?: number;
-
   onOpportunityUpdated: (opportunity: IOpportunity) => void;
-
 };
-
 
 const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, onClose, opportunityId, onOpportunityUpdated }) => {
   const [opportunity, setOpportunity] = useState<IOpportunity | null>(null);
@@ -34,6 +30,8 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
         if (opportunityId !== undefined) {
           const opportunityData: IOpportunity = await fetchOpportunityById(opportunityId);
           setOpportunity(opportunityData);
+        } else {
+          throw new Error('Opportunity ID is undefined');
         }
       } catch (error) {
         setError('Error loading opportunity data'); 
@@ -49,7 +47,8 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
 
   useEffect(() => {
     const validateForm = () => {
-      return opportunity !== null && opportunity.businessName !== '' && opportunity.businessLine != null && opportunity.description !== '' && opportunity.estimatedValue > 0 && opportunity.estimatedDate !== '' && opportunity.status !== undefined;
+      const validStatuses = ["Open", "Under Review", "Purchase Order", "Completed"];
+      return opportunity !== null && opportunity.businessName !== '' && opportunity.businessLine && opportunity.description !== '' && opportunity.estimatedValue > 0 && opportunity.estimatedDate !== '' && validStatuses.includes(opportunity.status);
     };
     setIsFormValid(validateForm());
   }, [opportunity]);
@@ -67,7 +66,7 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
     try {
       if (opportunity) {
         const updatedOpportunity = await updateOpportunity(opportunity);
-        alert('Opportunity updated successfully');
+        toast.success('Opportunity updated successfully');
         onOpportunityUpdated(updatedOpportunity);
         onClose();
       }
@@ -77,28 +76,31 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle className="text-center text-2xl font-bold">Update Opportunity</DialogTitle>
-      <DialogContent dividers>
-        {loading ? (
-          <Spinner />
-        ) : error ? (
-          <ErrorComponent message={error} />
-        ) : opportunity ? (
-          <OpportunityForm opportunity={opportunity} onChange={handleOpportunityChange} />
-        ) : (
-          <p>Error: Opportunity not found</p>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleUpdateOpportunity} color="primary" variant="contained" disabled={!isFormValid}>
-          Update
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className="text-center text-2xl font-bold">Update Opportunity</DialogTitle>
+        <DialogContent dividers>
+          {loading ? (
+            <Spinner />
+          ) : error ? (
+            <ErrorComponent message={error} />
+          ) : opportunity ? (
+            <OpportunityForm opportunity={opportunity} onChange={handleOpportunityChange} />
+          ) : (
+            <p>Error: Opportunity not found</p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateOpportunity} color="primary" variant="contained" disabled={!isFormValid}>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ToastContainer />
+    </>
   );
 };
 

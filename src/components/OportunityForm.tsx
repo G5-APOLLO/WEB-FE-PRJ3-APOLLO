@@ -10,7 +10,7 @@ type OpportunityFormProps = {
 const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    onChange({ ...opportunity, [name]: value });
+    onChange({ ...opportunity, [name]: name === 'estimatedValue' ? Number(value) : value });
   };
 
   return (
