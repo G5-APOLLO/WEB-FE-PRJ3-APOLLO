@@ -153,6 +153,7 @@ function ClientTable() {
     columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
     rows={clients || []}
     style={{ height: '100%', width: '100%' }}
+    getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
     slots={{
       pagination: () => (
         <CustomPagination 
