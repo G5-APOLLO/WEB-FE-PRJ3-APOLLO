@@ -1,9 +1,9 @@
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 import { TextField, Box } from '@mui/material';
 
 type ClientFormProps = {
-    client: ListClietnType;
-    onChange: (updatedClient: ListClietnType) => void;
+    client: ListClientType;
+    onChange: (updatedClient: ListClientType) => void;
   };
   
   const ClientForm: React.FC<ClientFormProps> = ({ client, onChange }) => {

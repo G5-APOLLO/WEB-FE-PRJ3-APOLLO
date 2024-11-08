@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
 import { createClient } from '../services/createClient.service';
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 
 type CreateClientModalProps = {
   open: boolean;
   onClose: () => void;
-  onClientCreated: (client: ListClietnType) => void;
+  onClientCreated: (client: ListClientType) => void;
 };
 
 const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, onClientCreated }) => {
-  const initialClientState: ListClietnType = {
+  const initialClientState: ListClientType = {
     id: null,
     nit: '',
     name: '',
@@ -23,11 +23,11 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
     active: true,
   };
 
-  const [client, setClient] = useState<ListClietnType>(initialClientState);
+  const [client, setClient] = useState<ListClientType>(initialClientState);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleClientChange = (updatedClient: ListClietnType) => {
+  const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
   };
 
