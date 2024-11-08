@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
@@ -8,7 +8,7 @@ import CreateClientModal from './CreateClientModal';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import CloseIcon from '@mui/icons-material/Close';
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 import UpdateClientModal from './UpdateClientModal';
 
 function ClientTable() {
@@ -17,7 +17,8 @@ function ClientTable() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false); // Estado para el modal de actualización
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
 
   useEffect(() => {
     if (clientsData) {
@@ -57,7 +58,7 @@ function ClientTable() {
     setOpenCreateModal(false);
   };
 
-  const handleClientCreated = (newClient: ListClietnType) => {
+  const handleClientCreated = (newClient: ListClientType) => {
     setClients([...clients, newClient]);
   };
 
@@ -71,7 +72,7 @@ function ClientTable() {
     setSelectedClientId(null);
   };
 
-  const handleClientUpdated = (updatedClient: ListClietnType) => {
+  const handleClientUpdated = (updatedClient: ListClientType) => {
     setClients((prevClients) =>
       prevClients.map((client) =>
         client.id === updatedClient.id ? updatedClient : client
@@ -146,6 +147,10 @@ function ClientTable() {
         rows={clients || []}
         style={{ height: '100%', width: '100%' }}
         getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[10, 25, 50]}
         classes={{
           root: 'bg-white shadow-md rounded-lg',
           columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',

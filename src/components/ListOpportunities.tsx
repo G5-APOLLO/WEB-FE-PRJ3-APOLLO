@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Tooltip } from "@mui/material";
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
@@ -20,6 +20,8 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
   
   const [selectedOpportunity, setSelectedOpportunity] = useState<IOpportunity | null>(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
 
   const handleOpenUpdateModal = (opportunity: IOpportunity) => {
     setSelectedOpportunity(opportunity);
@@ -147,6 +149,10 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
           columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })} 
           rows={opportunities || []} 
           style={{height: 'auto', width: '100%'}}
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[10, 25, 50]}
           classes={{
             root: 'bg-white shadow-md rounded-lg',
             columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
