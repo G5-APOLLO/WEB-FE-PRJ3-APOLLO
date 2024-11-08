@@ -12,5 +12,5 @@ export type Opportunity = {
     phone: string;
     email: string;
     active: boolean;
-    opportunities: Opportunity[]; 
+    opportunities?: Opportunity[]; 
 };

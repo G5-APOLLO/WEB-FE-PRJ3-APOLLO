@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import CustomPagination from './CustomPagination';
+import { DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
 import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
@@ -8,7 +9,7 @@ import CreateClientModal from './CreateClientModal';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import CloseIcon from '@mui/icons-material/Close';
-import { ListClietnType } from '../types/ListClient.type';
+import { ListClientType } from '../types/ListClient.type';
 import UpdateClientModal from './UpdateClientModal';
 
 function ClientTable() {
@@ -17,7 +18,10 @@ function ClientTable() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false); // Estado para el modal de actualización
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
+  const [pageSize, setPageSize] = useState(10);
+
 
   useEffect(() => {
     if (clientsData) {
@@ -57,7 +61,7 @@ function ClientTable() {
     setOpenCreateModal(false);
   };
 
-  const handleClientCreated = (newClient: ListClietnType) => {
+  const handleClientCreated = (newClient: ListClientType) => {
     setClients([...clients, newClient]);
   };
 
@@ -71,13 +75,15 @@ function ClientTable() {
     setSelectedClientId(null);
   };
 
-  const handleClientUpdated = (updatedClient: ListClietnType) => {
+  const handleClientUpdated = (updatedClient: ListClientType) => {
     setClients((prevClients) =>
       prevClients.map((client) =>
         client.id === updatedClient.id ? updatedClient : client
       )
     );
   };
+
+  const totalPages = Math.ceil(clients.length / paginationModel.pageSize);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
@@ -130,6 +136,7 @@ function ClientTable() {
   if (isLoading) return <Spinner />;
   if (isError || error) return <ErrorComponent message={error || 'Error loading clients'} />;
 
+
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-center text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
@@ -140,20 +147,36 @@ function ClientTable() {
         New Client
       </Button>
 
-      <div className="w-full h-[40rem] overflow-y-auto">
-      <DataGrid
-        columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })}
-        rows={clients || []}
-        style={{ height: '100%', width: '100%' }}
-        getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
-        classes={{
-          root: 'bg-white shadow-md rounded-lg',
-          columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
-          row: 'hover:bg-gray-100',
-        }}
-      />
-    </div>
 
+  <div className="w-full h-[40rem] overflow-y-auto">
+  <DataGrid
+    columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
+    rows={clients || []}
+    style={{ height: '100%', width: '100%' }}
+    getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
+    slots={{
+      pagination: () => (
+        <CustomPagination 
+          paginationModel={paginationModel} 
+          setPaginationModel={setPaginationModel} 
+          totalPages={totalPages} 
+        />
+      ),
+    }}
+    pageSizeOptions={[10, 20, 50, 100]}
+    paginationModel={paginationModel}
+    onPaginationModelChange={(model) => {
+      setPaginationModel({ ...model, page: 1 });
+      setPageSize(pageSize);
+    }}
+    classes={{
+      root: 'bg-white shadow-md rounded-lg',
+      columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
+      row: 'hover:bg-gray-100',
+    }}
+
+  />
+</div>
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           sx={{
