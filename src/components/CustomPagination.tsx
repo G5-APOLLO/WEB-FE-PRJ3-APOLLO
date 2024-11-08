@@ -14,16 +14,17 @@ interface CustomPaginationProps {
 
 const CustomPagination: React.FC<CustomPaginationProps> = ({ paginationModel, setPaginationModel, totalPages }) => {
   const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-    setPaginationModel((prevModel) => ({
+    setPaginationModel((prevModel: PaginationModel) => ({
       ...prevModel,
-      page: newPage,
+      page: newPage - 1, 
     }));
   };
 
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPaginationModel((prevModel) => ({
+    setPaginationModel((prevModel: PaginationModel) => ({
       ...prevModel,
       pageSize: parseInt(event.target.value, 10),
+      page: 0, 
     }));
   };
 
@@ -42,9 +43,9 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ paginationModel, se
       </select>
       <Pagination
         count={totalPages}
-        page={paginationModel.page}
+        page={paginationModel.page + 1} 
         onChange={handlePageChange}
-        className="ml-auto"
+        sx={{ '& .MuiPaginationItem-root': { borderRadius: 1 },  bgcolor: 'background.paper' }}
       />
     </div>
   );

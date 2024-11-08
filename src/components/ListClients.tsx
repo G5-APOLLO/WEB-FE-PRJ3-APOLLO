@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CustomPagination from './CustomPagination';
-import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from "@mui/x-data-grid";
-import { Select, MenuItem,Button, Modal, Box, IconButton } from "@mui/material";
+import { DataGrid, GridColDef, GridPaginationModel} from "@mui/x-data-grid";
+import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
 import ClienteDetalle from './ClienteDetalle';
@@ -21,7 +21,7 @@ function ClientTable() {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
   const [pageSize, setPageSize] = useState<number>(10);
-  const [page, setPage] = useState<number>(0);
+
 
   useEffect(() => {
     if (clientsData) {
@@ -83,7 +83,7 @@ function ClientTable() {
     );
   };
 
-  const totalPages = Math.ceil(clients.length / pageSize);
+  const totalPages = Math.ceil(clients.length / paginationModel.pageSize);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
@@ -136,10 +136,6 @@ function ClientTable() {
   if (isLoading) return <Spinner />;
   if (isError || error) return <ErrorComponent message={error || 'Error loading clients'} />;
 
-  const ListClients = () => {
-    const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 10 });
-    const totalPages = Math.ceil((clients?.length || 0) / paginationModel.pageSize);
-  }
 
   return (
     <div className="container mx-auto mt-10">
@@ -169,7 +165,7 @@ function ClientTable() {
     pageSizeOptions={[10, 20, 50, 100]}
     paginationModel={paginationModel}
     onPaginationModelChange={(model) => {
-      setPaginationModel(model);
+      setPaginationModel({ ...model, page: 1 });
       setPageSize(model.pageSize);
     }}
     classes={{
@@ -177,6 +173,7 @@ function ClientTable() {
       columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
       row: 'hover:bg-gray-100',
     }}
+
   />
 </div>
       <Modal open={openModal} onClose={handleCloseModal}>
