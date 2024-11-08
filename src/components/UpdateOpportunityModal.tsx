@@ -47,7 +47,7 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
 
   useEffect(() => {
     const validateForm = () => {
-      const validStatuses = ["Open", "Under Review", "Purchase Order", "Completed"];
+      const validStatuses = ["Open", "In Study", "Purchase Order", "Finalized"];
       return opportunity !== null && opportunity.businessName !== '' && opportunity.businessLine && opportunity.description !== '' && opportunity.estimatedValue > 0 && opportunity.estimatedDate !== '' && validStatuses.includes(opportunity.status);
     };
     setIsFormValid(validateForm());
