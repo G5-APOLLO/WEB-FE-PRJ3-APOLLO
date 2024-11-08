@@ -1,4 +1,8 @@
-export type ListClietnType = {
+export type Opportunity = {
+    id: number;
+    name: string;
+};
+  export type ListClientType = {
     id: number | null;
     nit: string;
     name: string;
@@ -8,4 +12,5 @@ export type ListClietnType = {
     phone: string;
     email: string;
     active: boolean;
+    opportunities: Opportunity[]; 
 };
