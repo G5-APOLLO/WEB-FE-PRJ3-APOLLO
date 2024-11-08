@@ -152,6 +152,7 @@ function ClientTable() {
         rows={clients || []}
         style={{ height: '100%', width: '100%' }}
         paginationModel={paginationModel}
+        getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
         onPaginationModelChange={(model) => setPaginationModel(model)}
         slots={{
           pagination: () => <CustomPagination paginationModel={paginationModel} setPaginationModel={setPaginationModel} totalPages={totalPages} />,
