@@ -5,6 +5,8 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
+import UpdateOpportunityModal from './UpdateOpportunityModal';
+import { IOpportunity } from '../types/ListOpportunity.type';
 
 interface OpportunitiesTableProps {
   clientId?: number;
@@ -15,6 +17,28 @@ interface OpportunitiesTableProps {
 function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoClick }: OpportunitiesTableProps) {
   const { data: opportunityData, isError, isLoading } = useGetOpportunities(clientId);
   const [opportunities, setOpportunities] = useState(opportunityData || []);
+  
+  const [selectedOpportunity, setSelectedOpportunity] = useState<IOpportunity | null>(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  const handleOpenUpdateModal = (opportunity: IOpportunity) => {
+    setSelectedOpportunity(opportunity);
+    setIsUpdateModalOpen(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setSelectedOpportunity(null);
+  };
+
+  const handleOpportunityUpdated = (updatedOpportunity: IOpportunity) => {
+
+    setOpportunities((prevOpportunities) =>
+      prevOpportunities.map((opp) =>
+        opp.id === updatedOpportunity.id ? updatedOpportunity : opp
+      )
+    );
+  };
   
   useEffect(() => {
     if (opportunityData) {
@@ -71,11 +95,11 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
       field: "update",
       headerName: "Update",
       width: 125,
-      renderCell: () => (
+      renderCell: (params) => (
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {}}
+          onClick={() => handleOpenUpdateModal(params.row as IOpportunity)}
         >
           Update
         </Button>
@@ -130,7 +154,14 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
           }}
         />
       </div>
+      <UpdateOpportunityModal
+        open={isUpdateModalOpen}
+        onClose={handleCloseUpdateModal}
+        opportunityId={selectedOpportunity ? selectedOpportunity.id : undefined}
+        onOpportunityUpdated={handleOpportunityUpdated}
+      />
     </div>
+    
   );
 }
 
