@@ -140,19 +140,19 @@ function ClientTable() {
         New Client
       </Button>
 
-      <div className="w-full">
-        <DataGrid
-          columns={columns}
-          rows={clients || []}
-          style={{ height: 'auto', width: '100%' }}
-          getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
-          classes={{
-            root: 'bg-white shadow-md rounded-lg',
-            columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
-            row: 'hover:bg-gray-100',
-          }}
-        />
-      </div>
+      <div className="w-full h-[40rem] overflow-y-auto">
+      <DataGrid
+        columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })}
+        rows={clients || []}
+        style={{ height: '100%', width: '100%' }}
+        getRowClassName={(params) => params.row.active ? '' : 'text-red-500 bg-red-100'}
+        classes={{
+          root: 'bg-white shadow-md rounded-lg',
+          columnHeader: 'bg-gray-700 text-white shadow-lg border-b border-gray-700',
+          row: 'hover:bg-gray-100',
+        }}
+      />
+    </div>
 
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
