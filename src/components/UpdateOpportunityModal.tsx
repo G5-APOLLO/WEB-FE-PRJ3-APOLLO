@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import OpportunityForm from './OportunityForm';
+import OpportunityForm from './UpdateOportunityForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchOpportunityById, updateOpportunity } from '../services/oportunity.service';
