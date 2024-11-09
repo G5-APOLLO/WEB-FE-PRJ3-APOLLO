@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ClienteDetalleInferior from './ClienteDetalleInferior';
 import OpportunitiesTable from './ListOpportunities'; 
 import ClienteDetalleSuperior from './ClienteDetalleSuperior';
+import TrackingActivitiesTable from './TrackingActivitiesTable';
 
 interface ClienteDetalleProps {
     clientID: number;
@@ -34,9 +34,8 @@ const ClienteDetalle: React.FC<ClienteDetalleProps> = ({clientID}) => {
 
             {/* Renderiza la sección inferior*/}
             {selectedOpportunity && (
-                <ClienteDetalleInferior
-                oportunidadId={selectedOpportunity.id}
-                nombreOportunidad={selectedOpportunity.name}
+                <TrackingActivitiesTable
+                opportunityId={selectedOpportunity.id}
             />
          )}
         </div>
