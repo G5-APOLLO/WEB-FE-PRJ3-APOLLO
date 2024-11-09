@@ -22,7 +22,7 @@ const Header = () => {
             <a href="oportunidades" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaChartLine className="mr-2" /> Opportunities
             </a>
-            <a href="#seguimiento" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+            <a href="seguimiento" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaClipboardList className="mr-2" /> Tracking
             </a>
             <a href="#dashboard" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
@@ -49,8 +49,8 @@ const Header = () => {
           <a href="oportunidades" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaChartLine className="mr-2" /> Opportunities
           </a>
-          <a href="HOLAAAA" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
-            <FaClipboardList className="mr-2" /> Trackingdnsdn 
+          <a href="seguimiento" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+            <FaClipboardList className="mr-2" /> Tracking
           </a>
           <a href="#dashboard" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaTachometerAlt className="mr-2" /> Dashboard
