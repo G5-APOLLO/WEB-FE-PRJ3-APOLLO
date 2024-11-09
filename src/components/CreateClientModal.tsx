@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+// components/CreateClientModal.tsx
+import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
-import { createClient } from '../services/createClient.service';
-import { ListClientType } from '../types/ListClient.type';
+import SuccessAlert from './SuccessAlert';
+import ErrorAlert from './ErrorAlert';
+import { createClient, fetchContactByName } from '../services/createClient.service';
+import { ListClientType, Contact } from '../types/ListClient.type';
 
 type CreateClientModalProps = {
   open: boolean;
@@ -21,58 +24,98 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
     phone: '',
     email: '',
     active: true,
+    contacts: [],
   };
 
   const [client, setClient] = useState<ListClientType>(initialClientState);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
   };
 
-  useEffect(() => {
-    const validateForm = () => {
-      return client.nit !== '' && client.name !== '' && client.email !== '';
-    };
-    setIsFormValid(validateForm());
-  }, [client]);
+  const handleContactsChange = (updatedContacts: Contact[]) => {
+    setContacts(updatedContacts);
+  };
+
+  const handleFormValidityChange = (isValid: boolean) => {
+    setIsFormValid(isValid);
+  };
 
   const handleCreateClient = async () => {
-    if (!isFormValid || isSubmitting) {
+    if (!isFormValid) {
+      setErrorAlertOpen(true);
       return;
     }
 
-    setIsSubmitting(true); // Deshabilita el botón después de hacer clic
+    setIsSubmitting(true);
 
     try {
-      const newClient = await createClient(client);
-      alert('Client created successfully');
+
+      const contactIds: number[] = [];
+      for (const contact of contacts) {
+        const fetchedContact = await fetchContactByName(contact.firstName + ' ' + contact.lastName);
+        if (fetchedContact) {
+          contactIds.push(fetchedContact.id);
+        } else {
+          throw new Error(`Contact "${contact.firstName} ${contact.lastName}" not found`);
+        }
+      }
+
+      const newClient = await createClient({ ...client, contacts: contactIds });
+      setSuccessAlertOpen(true);
       onClientCreated(newClient);
       setClient(initialClientState);
+      setContacts([]);
       onClose();
     } catch (error) {
-      alert('Error creating client');
+      setErrorAlertOpen(true);
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onClose={() => { setClient(initialClientState); onClose(); }} fullWidth maxWidth="sm">
-      <DialogTitle className="text-center text-2xl font-bold">New Client</DialogTitle>
-      <DialogContent dividers>
-        <ClientForm client={client} onChange={handleClientChange} />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => { setClient(initialClientState); onClose(); }} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleCreateClient} color="primary" variant="contained" disabled={!isFormValid || isSubmitting}>
-          Save
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className="text-center text-2xl font-bold">New Client</DialogTitle>
+        <DialogContent dividers>
+          <ClientForm
+            client={client}
+            onChange={handleClientChange}
+            onContactsChange={handleContactsChange}
+            onFormValidityChange={handleFormValidityChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCreateClient}
+            color="primary"
+            variant="contained"
+            disabled={!isFormValid || isSubmitting}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <SuccessAlert
+        open={successAlertOpen}
+        onClose={() => setSuccessAlertOpen(false)}
+        message="Client created successfully"
+      />
+      <ErrorAlert
+        open={errorAlertOpen}
+        onClose={() => setErrorAlertOpen(false)}
+        message="Error creating client or contact not found"
+      />
+    </>
   );
 };
 

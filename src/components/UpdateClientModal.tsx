@@ -1,11 +1,13 @@
-
+// components/UpdateClientModal.tsx
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
-import { fetchClientById, updateClient } from '../services/createClient.service';
-import { ListClientType } from '../types/ListClient.type';
+import { fetchClientById, updateClient, fetchContactByName } from '../services/createClient.service';
+import { ListClientType, Contact } from '../types/ListClient.type';
+import SuccessAlert from './SuccessAlert';
+import ErrorAlert from './ErrorAlert';
 
 type UpdateClientModalProps = {
   open: boolean;
@@ -16,9 +18,13 @@ type UpdateClientModalProps = {
 
 const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, clientId, onClientUpdated }) => {
   const [client, setClient] = useState<ListClientType | null>(null);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   useEffect(() => {
     const fetchClientData = async () => {
@@ -27,8 +33,20 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
       try {
         const clientData: ListClientType = await fetchClientById(clientId);
         setClient(clientData);
+        
+        const contactPromises = clientData.contacts ? clientData.contacts.map(async (contactId: number) => {
+          const contactData = await fetchClientById(contactId); // Obtener datos de cada contacto
+          return {
+            firstName: contactData.name,
+            phone: contactData.phone,
+            email: contactData.email
+          } as Contact;
+        }) : [];
+
+        const contactsData = await Promise.all(contactPromises);
+        setContacts(contactsData);
       } catch (error) {
-        setError('Error loading client data'); 
+        setError('Error loading client data');
       } finally {
         setLoading(false);
       }
@@ -39,58 +57,86 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
     }
   }, [clientId, open]);
 
-  useEffect(() => {
-    const validateForm = () => {
-      return client !== null && client.nit !== '' && client.name !== '' && client.email !== '';
-    };
-    setIsFormValid(validateForm());
-  }, [client]);
-
   const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
   };
 
+  const handleContactsChange = (updatedContacts: Contact[]) => {
+    setContacts(updatedContacts);
+  };
+
+  const handleFormValidityChange = (isValid: boolean) => {
+    setIsFormValid(isValid);
+  };
+
   const handleUpdateClient = async () => {
-    if (!isFormValid) {
-      alert('Please complete all required fields');
+    if (!isFormValid || isSubmitting) {
+      setErrorAlertOpen(true);
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
       if (client) {
-        const updatedClient = await updateClient(client);
-        alert('Client updated successfully');
+        // Busca el id de cada contacto por nombre
+        const contactIds = await Promise.all(
+          contacts.map(async (contact) => {
+            const contactData = await fetchContactByName(contact.firstName);
+            if (!contactData || !contactData.id) {
+              throw new Error(`Contact "${contact.firstName}" not found`);
+            }
+            return contactData.id;
+          })
+        );
+
+        const updatedClient = await updateClient({ ...client, contacts: contactIds });
+        setSuccessAlertOpen(true);
         onClientUpdated(updatedClient);
         onClose();
       }
     } catch (error) {
-      setError('Error updating client');
+      setError('Error updating client or contact not found');
+      setErrorAlertOpen(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle className="text-center text-2xl font-bold">Update Client</DialogTitle>
-      <DialogContent dividers>
-        {loading ? (
-          <Spinner />
-        ) : error ? (
-          <ErrorComponent message={error} />
-        ) : client ? (
-          <ClientForm client={client} onChange={handleClientChange} />
-        ) : (
-          <p>Error: Client not found</p>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleUpdateClient} color="primary" variant="contained" disabled={!isFormValid}>
-          Update
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className="text-center text-2xl font-bold">Update Client</DialogTitle>
+        <DialogContent dividers>
+          {loading ? (
+            <Spinner />
+          ) : error ? (
+            <ErrorComponent message={error} />
+          ) : client ? (
+            <ClientForm 
+              client={client} 
+              onChange={handleClientChange} 
+              onContactsChange={handleContactsChange} 
+              onFormValidityChange={handleFormValidityChange} 
+              contacts={contacts} 
+            />
+          ) : (
+            <p>Error: Client not found</p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateClient} color="primary" variant="contained" disabled={!isFormValid || isSubmitting}>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <SuccessAlert open={successAlertOpen} onClose={() => setSuccessAlertOpen(false)} message="Client updated successfully" />
+      <ErrorAlert open={errorAlertOpen} onClose={() => setErrorAlertOpen(false)} message="Please complete all required fields or try again" />
+    </>
   );
 };
 

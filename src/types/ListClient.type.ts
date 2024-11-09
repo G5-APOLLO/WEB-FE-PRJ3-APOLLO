@@ -17,3 +17,10 @@ export type Opportunity = {
     opportunities?: Opportunity[]; 
     contacts?: number[];
 };
+
+export type Contact = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+};
