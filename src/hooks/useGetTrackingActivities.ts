@@ -3,7 +3,7 @@ import { fetchTrackingActivities} from '../services/getTrackingActivities.servic
 
 export const useGetTrackingActivities = (oportunidadId: number) => {
 return useQuery({
-    queryKey: ['actividadesSeguimiento', oportunidadId],
+    queryKey: ['trackingActivities', oportunidadId],
     queryFn: () => fetchTrackingActivities(oportunidadId),
   });
 };

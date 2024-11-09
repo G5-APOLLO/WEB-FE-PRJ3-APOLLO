@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Tooltip } from "@mui/material";
 import Spinner from "./Spinner";
@@ -6,38 +6,53 @@ import ErrorComponent from './Error-component';
 import { useGetTrackingActivities } from '../hooks/useGetTrackingActivities';
 import CustomPagination from './CustomPagination';
 
-
 interface TrackingActivitiesTableProps {
-    oportunidadId?: number;
+    opportunityId?: number;
 }
 
 interface TrackingActivity {
     id: number;
-    oportunidadId: number;
-    tipoContacto: string; // "Call", "Email", "In-Person Meeting"
-    fechaContacto: string; // "YYYY-MM-DD"
-    clienteContacto: string; // Nombre del contacto asociado al cliente
-    ejecutivoComercial: string; // Nombre del ejecutivo comercial
-    descripcion: string; // Conclusiones de la actividad
+    opportunityId: number;
+    opportunityName: string;
+    contactType: string;
+    contactDate: string;
+    clientContact: string;
+    salesExecutive: string;
+    description: string;
 }
 
-function TrackingActivitiesTable({ oportunidadId }: TrackingActivitiesTableProps) {
-    const { data: activitiesData, isError, isLoading } = useGetTrackingActivities(oportunidadId ?? 0);
+function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps) {
+    const { data: activitiesData, isError, isLoading } = useGetTrackingActivities(opportunityId ?? 0);
     const [activities, setActivities] = useState<TrackingActivity[]>(activitiesData || []);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
 
-
-    // Actualizar el estado cuando se reciben nuevos datos
-    React.useEffect(() => {
+    useEffect(() => {
         if (activitiesData) {
             setActivities(activitiesData);
         }
     }, [activitiesData]);
 
+    const handleDelete = (id: number) => {
+        console.log(`Delete activity with ID: ${id}`);
+    };
+
+    if (isLoading) return <Spinner />;
+    if (isError) return <ErrorComponent message="Error loading tracking activities" />;
+
     const columns: GridColDef[] = [
         { field: "id", headerName: "ID", width: 70 },
         {
-            field: "tipoContacto",
+            field: "opportunityName",
+            headerName: "Opportunity Name",
+            width: 150,
+            renderCell: (params) => (
+                <Tooltip title={params.value}>
+                    <span>{params.value}</span>
+                </Tooltip>
+            )
+        },
+        {
+            field: "contactType",
             headerName: "Contact Type",
             width: 150,
             renderCell: (params) => (
@@ -47,15 +62,13 @@ function TrackingActivitiesTable({ oportunidadId }: TrackingActivitiesTableProps
             )
         },
         {
-            field: "fechaContacto",
+            field: "contactDate",
             headerName: "Contact Date",
             width: 150,
-            type: 'date',
-            valueGetter: (params: { value: string }) => new Date(params.value)
         },
         {
-            field: "clienteContacto",
-            headerName: "Contact Client",
+            field: "clientContact",
+            headerName: "Client Contact",
             width: 200,
             renderCell: (params) => (
                 <Tooltip title={params.value}>
@@ -64,8 +77,8 @@ function TrackingActivitiesTable({ oportunidadId }: TrackingActivitiesTableProps
             )
         },
         {
-            field: "ejecutivoComercial",
-            headerName: "Commercial Executive",
+            field: "salesExecutive",
+            headerName: "Sales Executive",
             width: 200,
             renderCell: (params) => (
                 <Tooltip title={params.value}>
@@ -74,7 +87,7 @@ function TrackingActivitiesTable({ oportunidadId }: TrackingActivitiesTableProps
             )
         },
         {
-            field: "descripcion",
+            field: "description",
             headerName: "Description",
             width: 300,
             renderCell: (params) => (
@@ -108,24 +121,13 @@ function TrackingActivitiesTable({ oportunidadId }: TrackingActivitiesTableProps
         },
     ];
 
-    const handleDelete = (id: number) => {
-        // Implementar lógica de eliminación aquí
-        console.log(`Delete activity with ID: ${id}`);
-        // Por ejemplo, podrías hacer una llamada al API para eliminar la actividad
-    };
-
-    if (isLoading) return <Spinner />;
-    if (isError) return <ErrorComponent message="Error loading tracking activities" />;
-
     const totalPages = Math.ceil(activities.length / paginationModel.pageSize);
 
-
     return (
-        <div className="p-4 bg-white rounded shadow">
-            <h3 className="text-lg font-semibold mb-4">Tracking Activities</h3>
-            <div className="w-full h-[30rem]">
+        <div className="container mx-auto mt-10">
+            <div className="w-full h-[40rem] overflow-y-auto">
                 <DataGrid
-                    columns={columns}
+                    columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
                     rows={activities || []}
                     style={{ height: '100%', width: '100%' }}
                     pagination
