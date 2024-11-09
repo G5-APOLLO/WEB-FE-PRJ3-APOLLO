@@ -2,6 +2,8 @@ export type Opportunity = {
     id: number;
     name: string;
 };
+
+
   export type ListClientType = {
     id: number | null;
     nit: string;
@@ -13,4 +15,5 @@ export type Opportunity = {
     email: string;
     active: boolean;
     opportunities?: Opportunity[]; 
+    contacts?: number[];
 };
