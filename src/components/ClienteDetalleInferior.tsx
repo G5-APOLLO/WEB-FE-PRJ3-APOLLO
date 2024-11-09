@@ -1,5 +1,5 @@
 import React from 'react';
-import { useActividadesSeguimiento } from '../hooks/useActivity';
+import { useGetTrackingActivities } from '../hooks/useGetTrackingActivities';
 import Spinner from './Spinner';
 import ErrorComponent from './Error-component';
 
@@ -15,7 +15,7 @@ interface ClienteDetalleInferiorProps {
 }
 
 const ClienteDetalleInferior: React.FC<ClienteDetalleInferiorProps> = ({ oportunidadId, nombreOportunidad }) => {
-    const { data: actividades, isLoading, isError } = useActividadesSeguimiento(oportunidadId);
+    const { data: actividades, isLoading, isError } = useGetTrackingActivities(oportunidadId);
 
     if (isLoading) return <Spinner />;
     if (isError) return <ErrorComponent message='Error al cargar actividades'/>;
