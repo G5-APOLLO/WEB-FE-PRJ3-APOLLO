@@ -143,7 +143,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
 
   return (
     <div className="container mx-auto mt-10">
-      <div className="w-full h-[40rem] overflow-y-auto">
+      <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
         <DataGrid 
           columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })} 
           rows={opportunities || []} 
