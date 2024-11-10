@@ -51,3 +51,30 @@ export const updateClient = async (client: ListClientType): Promise<ListClientTy
 
   return response.json();
 };
+
+// Función para buscar un contacto por su nombre (insensible a mayúsculas/minúsculas)
+export const fetchContactByName = async (name: string): Promise<{ id: number; name: string } | null> => {
+  try {
+    // Realizamos una solicitud GET para obtener todos los clientes
+    const response = await fetch(`${API_URL}/clients`);
+
+    if (!response.ok) {
+      throw new Error('Error fetching clients');
+    }
+
+    const clients = await response.json();
+
+    // Convertimos el nombre proporcionado a minúsculas para la comparación
+    const normalizedName = name.toLowerCase();
+
+    // Buscamos el primer cliente cuyo nombre coincida (ignorando mayúsculas/minúsculas)
+    const contact = clients.find((client: { name: string }) => client.name.toLowerCase() === normalizedName);
+
+    // Si encontramos el contacto, devolvemos su id y nombre, de lo contrario, devolvemos null
+    return contact ? { id: contact.id, name: contact.name } : null;
+  } catch (error) {
+    console.error('Error fetching contact by name:', error);
+    return null; // Devuelve `null` en caso de error
+  }
+};
+
