@@ -16,7 +16,7 @@ type CreateOpportunityModalProps = {
 
 const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, onClose }) => {
     const [clients, setClients] = useState<ListClientType[]>([]);
-    const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+    const [selectedClientId, setSelectedClientId] = useState<number>(0);
     const [businessName, setBusinessName] = useState<string>('');
     const [businessLine, setBusinessLine] = useState<string>('Outsourcing Resources');
     const [description, setDescription] = useState<string>('');
@@ -87,7 +87,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                         <TextField
                             select
                             label="Client"
-                            value={selectedClientId ?? ''}
+                            value={String(selectedClientId)}
                             onChange={(e) => setSelectedClientId(Number(e.target.value))}
                             fullWidth
                             required
