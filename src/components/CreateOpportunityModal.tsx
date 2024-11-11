@@ -115,10 +115,10 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             fullWidth
                             required
                         >
-                            <MenuItem value="Outsourcing Resources">Outsourcing Recursos</MenuItem>
-                            <MenuItem value="Web Development">Desarrollo Web</MenuItem>
-                            <MenuItem value="Mobile Development">Desarrollo Mobile</MenuItem>
-                            <MenuItem value="IT Consulting">Consultoría TI</MenuItem>
+                            <MenuItem value="Outsourcing Resources">Outsourcing Resources</MenuItem>
+                            <MenuItem value="Web Development">Web Development</MenuItem>
+                            <MenuItem value="Mobile Development">Mobile Development</MenuItem>
+                            <MenuItem value="IT Consulting">IT Consulting</MenuItem>
                         </TextField>
 
                         <TextField
@@ -133,7 +133,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
 
                         <TextField
                             label="Estimated Business Value (COP)"
-                            type="text" // Cambiado a 'text'
+                            type="text"
                             value={estimatedValue}
                             onChange={(e) => setEstimatedValue(e.target.value)}
                             fullWidth
