@@ -78,7 +78,6 @@ export const fetchContactByName = async (name: string): Promise<{ id: number; na
     return null; // Devuelve `null` en caso de error
   }
 };
-
 export const fetchClients = async (): Promise<ListClientType[]> => {
   try {
     const response = await axios.get(`${API_URL}/clients`);
