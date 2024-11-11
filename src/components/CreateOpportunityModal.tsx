@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 type CreateOpportunityModalProps = {
     open: boolean;
     onClose: () => void;
@@ -16,7 +15,7 @@ type CreateOpportunityModalProps = {
 
 const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, onClose }) => {
     const [clients, setClients] = useState<ListClientType[]>([]);
-    const [selectedClientId, setSelectedClientId] = useState<number | string>("");
+    const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
     const [businessName, setBusinessName] = useState<string>('');
     const [businessLine, setBusinessLine] = useState<string>('Outsourcing Resources');
     const [description, setDescription] = useState<string>('');
@@ -29,14 +28,16 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
     const mutation = useMutation(createOpportunity, {
         onSuccess: () => {
             queryClient.invalidateQueries('opportunities');
-            toast.success("Opportunity created successfully!");
-            setSelectedClientId('');
+            setSelectedClientId(0);
             setBusinessName('');
             setBusinessLine('Outsourcing Resources');
             setDescription('');
             setEstimatedValue('');
             setEstimatedDate('');
-            onClose();
+            toast.success("Opportunity created successfully!");
+            setTimeout(() => {
+                onClose();
+            }, 500); // Da medio segundo antes de cerrar el modal
         },
         onError: () => {
             toast.error("Failed to create opportunity.");
@@ -59,7 +60,8 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
             description.trim() === "" ||
             !estimatedValue ||
             estimatedDate.trim() === ""
-        ) {
+        ) 
+        {
             toast.error("All fields are required.");
             return;
         }
@@ -74,7 +76,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
             estimatedDate,
             status,
         };
-
+        
         mutation.mutate(newOpportunity);
     };
 
@@ -87,12 +89,15 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                         <TextField
                             select
                             label="Client"
-                            value={selectedClientId}
-                            onChange={(e) => setSelectedClientId(Number(e.target.value))}
+                            value={selectedClientId || ''}
+                            onChange={(e) => setSelectedClientId(e.target.value === '' ? null : Number(e.target.value))}
                             fullWidth
                             required
                         >
-                            {Array.isArray(clients) && clients.map((client) => (
+                            <MenuItem value="" disabled>
+                                Select a client
+                            </MenuItem>
+                            {clients.map((client) => (
                                 <MenuItem key={client.id} value={client.id}>
                                     {client.name}
                                 </MenuItem>
