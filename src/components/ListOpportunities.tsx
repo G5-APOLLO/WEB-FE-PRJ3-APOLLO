@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Tooltip, Modal, Box, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import Swal from 'sweetalert2';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
 import UpdateOpportunityModal from './UpdateOpportunityModal';
+import { deleteOpportunityAndTracking } from '../services/oportunity.service'; // Assume this service is defined
 import { IOpportunity } from '../types/ListOpportunity.type';
 import CustomPagination from './CustomPagination';
 import OpportunityDetail from './OpportunityDetail';
@@ -48,12 +51,42 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
     setSelectedOpportunityId(opportunityId);
     setOpenOpportunityDetail(true);
   };
-  
+
   const handleCloseOpportunityDetail = () => {
     setOpenOpportunityDetail(false);
     setSelectedOpportunityId(null);
   };
-  
+
+  // Confirm and delete an opportunity
+  const handleDeleteOpportunity = async (opportunityId: number) => {
+    // Confirmación para eliminar la oportunidad
+    const result = await Swal.fire({
+      title: 'Confirm Deletion',
+      text: 'Are you sure you want to delete this opportunity? This action is irreversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      // Elimina la oportunidad de inmediato en el estado local
+      setOpportunities(prevOpportunities => prevOpportunities.filter(opportunity => opportunity.id !== opportunityId));
+
+      try {
+        // Intenta eliminar las actividades de seguimiento asociadas
+        await deleteOpportunityAndTracking(opportunityId);
+        Swal.fire('Deleted!', 'The opportunity has been deleted.', 'success');
+      } catch (error) {
+        // Si falla la eliminación de actividades de seguimiento, reestablece el estado
+        console.log(error);
+        setOpportunities(prevOpportunities => [...prevOpportunities, prevOpportunities.find(opportunity => opportunity.id === opportunityId)!]);
+        Swal.fire('Error', 'Failed to delete the tracking activities. Opportunity was not deleted.', 'error');
+      }
+    }
+  };
+
   useEffect(() => {
     if (opportunityData) {
       setOpportunities(opportunityData);
@@ -67,7 +100,6 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
       field: "businessName",
       headerName: "Business Name",
       width: 200,
-  
       renderCell: (params) => (
         <Tooltip title={params.value}>
           <Button
@@ -80,9 +112,9 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
       )
     },
     { field: "businessLine", headerName: "Business Line", width: 200 },
-    { 
-      field: "description", 
-      headerName: "Description", 
+    {
+      field: "description",
+      headerName: "Description",
       width: 150,
       renderCell: (params) => (
         <Tooltip title={params.value}>
@@ -116,36 +148,36 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
       field: "delete",
       headerName: "Delete",
       width: 125,
-      renderCell: () => (
+      renderCell: (params) => (
         <Button
           variant="contained"
           color="error"
-          onClick={() => {}}
+          onClick={() => handleDeleteOpportunity(params.row.id)}
         >
           Delete
         </Button>
       )
     }, ...(showSeguimiento
       ? [{
-          field: "Tracking",
-          headerName: "Tracking",
-          hideable: false,
-          width: 150,
-          renderCell: (params: any ) => (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => onSeguimientoClick && onSeguimientoClick(params.row.id, params.row.businessName)}
-              className='w-[5.5rem]'
-            >
-              Tracking
-            </Button>
-          ),
-        }]
+        field: "Tracking",
+        headerName: "Tracking",
+        hideable: false,
+        width: 150,
+        renderCell: (params: any) => (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => onSeguimientoClick && onSeguimientoClick(params.row.id, params.row.businessName)}
+            className='w-[5.5rem]'
+          >
+            Tracking
+          </Button>
+        ),
+      }]
       : [])
   ];
 
-  if (isLoading) return <Spinner/>;
+  if (isLoading) return <Spinner />;
   if (isError) return <ErrorComponent message='Error loading Opportunities' />;
 
   const totalPages = Math.ceil(opportunities.length / paginationModel.pageSize);
@@ -153,20 +185,20 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
   return (
     <div className="container mx-auto mt-10">
       <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
-        <DataGrid 
-          columns={columns.map(column => column.field === 'id' ? { ...column, width: 65  } : { ...column, flex: 1 })} 
-          rows={opportunities || []} 
-          style={{height: '100%', width: '100%'}}
+        <DataGrid
+          columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
+          rows={opportunities || []}
+          style={{ height: '100%', width: '100%' }}
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[10, 20, 50, 100]}
           slots={{
             pagination: () => (
-              <CustomPagination 
-                paginationModel={paginationModel} 
-                setPaginationModel={setPaginationModel} 
-                totalPages={totalPages} 
+              <CustomPagination
+                paginationModel={paginationModel}
+                setPaginationModel={setPaginationModel}
+                totalPages={totalPages}
               />
             ),
           }}
