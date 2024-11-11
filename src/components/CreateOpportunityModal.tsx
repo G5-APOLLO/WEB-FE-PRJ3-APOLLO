@@ -37,7 +37,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
             toast.success("Opportunity created successfully!");
             setTimeout(() => {
                 onClose();
-            }, 500); // Da medio segundo antes de cerrar el modal
+            }, 500);
         },
         onError: () => {
             toast.error("Failed to create opportunity.");
