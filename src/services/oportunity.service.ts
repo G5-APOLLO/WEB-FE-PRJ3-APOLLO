@@ -23,3 +23,23 @@ export const updateOpportunity = async (opportunity: IOpportunity): Promise<IOpp
   }
   return response.json();
 };
+
+// opportunityService.ts
+export const deleteOpportunityAndTracking = async (id: number): Promise<void> => {
+  // Elimina la oportunidad
+  console.log(id)
+  const response = await fetch(`https://web-fe-prj3-api-apollo.onrender.com/opportunities/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Error deleting opportunity');
+  }
+
+  // Elimina las actividades de seguimiento asociadas
+  // const trackingResponse = await fetch(`https://web-fe-prj3-api-apollo.onrender.com/Trackingactivities?opportunityId=${id}`, {
+  //   method: 'DELETE',
+  // });
+  // if (!trackingResponse.ok) {
+  //   throw new Error('Error deleting tracking activities');
+  // }
+};
