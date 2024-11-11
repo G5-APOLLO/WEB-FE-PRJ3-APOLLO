@@ -65,7 +65,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
         }
 
         const newOpportunity: IOpportunity = {
-            id: undefined,
+            id: 0,
             clientIds: [selectedClientId],
             businessName,
             businessLine: businessLine as IOpportunity['businessLine'],
