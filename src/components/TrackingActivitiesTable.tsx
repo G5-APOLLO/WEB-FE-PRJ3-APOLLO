@@ -97,26 +97,31 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
             )
         },
         {
-            field: "actions",
-            headerName: "Actions",
-            width: 200,
+            field: "updateAction", 
+            headerName: "Update",
+            width: 120,
             renderCell: (params) => (
-                <div className="flex space-x-2">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => console.log(`Update activity with ID: ${params.row.id}`)}
-                    >
-                        Update
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => handleDelete(params.row.id)}
-                    >
-                        Delete
-                    </Button>
-                </div>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => console.log(`Update activity with ID: ${params.row.id}`)}
+                >
+                    Update
+                </Button>
+            ),
+        },
+        {
+            field: "deleteAction",  
+            headerName: "Delete",
+            width: 120,
+            renderCell: (params) => (
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDelete(params.row.id)}
+                >
+                    Delete
+                </Button>
             ),
         },
     ];
@@ -125,7 +130,7 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
 
     return (
         <div className="container mx-auto mt-10">
-            <div className="w-full h-[40rem] overflow-y-auto">
+            <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
                 <DataGrid
                     columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
                     rows={activities || []}
