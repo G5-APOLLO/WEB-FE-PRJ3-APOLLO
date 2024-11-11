@@ -83,7 +83,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
     return (
         <>
             <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-                <DialogTitle>Create New Opportunity</DialogTitle>
+                <DialogTitle className="text-center text-2xl font-bold">New Opportunity</DialogTitle>
                 <DialogContent dividers>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <TextField
