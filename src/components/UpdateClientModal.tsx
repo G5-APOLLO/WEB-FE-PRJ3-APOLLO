@@ -1,4 +1,3 @@
-// components/UpdateClientModal.tsx
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
@@ -31,9 +30,9 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
       try {
         const clientData: ListClientType = await fetchClientById(clientId);
         setClient(clientData);
-        
+
         const contactPromises = clientData.contacts ? clientData.contacts.map(async (contactId: number) => {
-          const contactData = await fetchClientById(contactId); // Obtener datos de cada contacto
+          const contactData = await fetchClientById(contactId);
           return {
             firstName: contactData.name,
             phone: contactData.phone,
@@ -65,12 +64,17 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
 
   const handleFormValidityChange = (isValid: boolean) => {
     setIsFormValid(isValid);
-    toast.error("Please complete all required fields or try again");
   };
 
   const handleUpdateClient = async () => {
-    if (!isFormValid || isSubmitting) {
-      toast.error("Please complete all required fields or try again");
+    if (!isFormValid || isSubmitting || !client ||
+      client.nit.trim() === "" ||
+      client.name.trim() === "" ||
+      client.address.trim() === "" ||
+      client.city.trim() === "" ||
+      client.country.trim() === "" ||
+      client.email.trim() === "") {
+      toast.error("Please complete all required fields.");
       return;
     }
 
@@ -94,12 +98,13 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
         onClose();
       }
     } catch (error) {
-      // setError('Error updating client or contact not found');
       toast.error("Error updating client or contact not found");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+
 
   return (
     <>
@@ -111,12 +116,12 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
           ) : error ? (
             <ErrorComponent message={error} />
           ) : client ? (
-            <ClientForm 
-              client={client} 
-              onChange={handleClientChange} 
-              onContactsChange={handleContactsChange} 
-              onFormValidityChange={handleFormValidityChange} 
-              contacts={contacts} 
+            <ClientForm
+              client={client}
+              onChange={handleClientChange}
+              onContactsChange={handleContactsChange}
+              onFormValidityChange={handleFormValidityChange}
+              contacts={contacts}
             />
           ) : (
             <p>Error: Client not found</p>

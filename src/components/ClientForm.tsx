@@ -152,7 +152,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsCha
       <TextField label="Address" name="address" type="text" value={client.address} onChange={handleInputChange} fullWidth required />
       <TextField label="City" name="city" type="text" value={client.city} onChange={handleInputChange} fullWidth required />
       <TextField label="Country" name="country" type="text" value={client.country} onChange={handleInputChange} fullWidth required />
-      <TextField label="Phone" name="phone" type="text" value={client.phone} onChange={handleInputChange} error={Boolean(errors.phone)} helperText={errors.phone} fullWidth required />
+      <TextField label="Phone" name="phone" type="text" value={client.phone} onChange={handleInputChange} error={Boolean(errors.phone)} helperText={errors.phone} fullWidth />
       <TextField label="Email" name="email" type="email" value={client.email} onChange={handleInputChange} error={Boolean(errors.email)} helperText={errors.email} fullWidth required />
 
       {localContacts.map((contact, index) => (
