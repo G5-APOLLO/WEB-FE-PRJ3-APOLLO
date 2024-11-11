@@ -87,7 +87,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                         <TextField
                             select
                             label="Client"
-                            value={selectedClientId}
+                            value={selectedClientId ?? ''}
                             onChange={(e) => setSelectedClientId(Number(e.target.value))}
                             fullWidth
                             required
