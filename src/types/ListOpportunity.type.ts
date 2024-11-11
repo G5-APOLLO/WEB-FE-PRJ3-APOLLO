@@ -1,5 +1,5 @@
 export interface IOpportunity {
-    id: number; 
+    id: number | null; 
     clientIds: number[];
     businessName: string; 
     businessLine: 'Outsourcing Resources' | 'Web Development' | 'Mobile Development' | 'IT Consulting'; 
