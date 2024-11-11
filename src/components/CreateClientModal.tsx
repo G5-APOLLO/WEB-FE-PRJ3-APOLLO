@@ -102,7 +102,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer /> {/* Añade el ToastContainer para mostrar notificaciones */}
+      <ToastContainer />
     </>
   );
 };
