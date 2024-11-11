@@ -16,7 +16,7 @@ type CreateOpportunityModalProps = {
 
 const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, onClose }) => {
     const [clients, setClients] = useState<ListClientType[]>([]);
-    const [selectedClientId, setSelectedClientId] = useState<number>(0);
+    const [selectedClientId, setSelectedClientId] = useState<number | string>("");
     const [businessName, setBusinessName] = useState<string>('');
     const [businessLine, setBusinessLine] = useState<string>('Outsourcing Resources');
     const [description, setDescription] = useState<string>('');
@@ -30,7 +30,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
         onSuccess: () => {
             queryClient.invalidateQueries('opportunities');
             toast.success("Opportunity created successfully!");
-            setSelectedClientId(null);
+            setSelectedClientId('');
             setBusinessName('');
             setBusinessLine('Outsourcing Resources');
             setDescription('');
