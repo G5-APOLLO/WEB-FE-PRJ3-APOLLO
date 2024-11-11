@@ -6,8 +6,8 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchClientById, updateClient, fetchContactByName } from '../services/createClient.service';
 import { ListClientType, Contact } from '../types/ListClient.type';
-import SuccessAlert from './SuccessAlert';
-import ErrorAlert from './ErrorAlert';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type UpdateClientModalProps = {
   open: boolean;
@@ -23,8 +23,6 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
-  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   useEffect(() => {
     const fetchClientData = async () => {
@@ -46,7 +44,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
         const contactsData = await Promise.all(contactPromises);
         setContacts(contactsData);
       } catch (error) {
-        setError('Error loading client data');
+        toast.error("Error loading client data");
       } finally {
         setLoading(false);
       }
@@ -67,11 +65,12 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
 
   const handleFormValidityChange = (isValid: boolean) => {
     setIsFormValid(isValid);
+    toast.error("Please complete all required fields or try again");
   };
 
   const handleUpdateClient = async () => {
     if (!isFormValid || isSubmitting) {
-      setErrorAlertOpen(true);
+      toast.error("Please complete all required fields or try again");
       return;
     }
 
@@ -79,7 +78,6 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
 
     try {
       if (client) {
-        // Busca el id de cada contacto por nombre
         const contactIds = await Promise.all(
           contacts.map(async (contact) => {
             const contactData = await fetchContactByName(contact.firstName);
@@ -91,13 +89,13 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
         );
 
         const updatedClient = await updateClient({ ...client, contacts: contactIds });
-        setSuccessAlertOpen(true);
+        toast.success("Client updated successfully");
         onClientUpdated(updatedClient);
         onClose();
       }
     } catch (error) {
-      setError('Error updating client or contact not found');
-      setErrorAlertOpen(true);
+      // setError('Error updating client or contact not found');
+      toast.error("Error updating client or contact not found");
     } finally {
       setIsSubmitting(false);
     }
@@ -133,9 +131,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
           </Button>
         </DialogActions>
       </Dialog>
-
-      <SuccessAlert open={successAlertOpen} onClose={() => setSuccessAlertOpen(false)} message="Client updated successfully" />
-      <ErrorAlert open={errorAlertOpen} onClose={() => setErrorAlertOpen(false)} message="Please complete all required fields or try again" />
+      <ToastContainer />
     </>
   );
 };

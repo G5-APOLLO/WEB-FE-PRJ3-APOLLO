@@ -31,8 +31,6 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
-  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
 
   const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
@@ -104,7 +102,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer /> {/* Añade el ToastContainer para mostrar notificaciones */}
+      <ToastContainer />
     </>
   );
 };
