@@ -94,15 +94,16 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             fullWidth
                             required
                         >
-                            <MenuItem value={0} disabled>
+                            <MenuItem value="" disabled>
                                 Select a client
                             </MenuItem>
                             {clients.map((client) => (
-                                <MenuItem key={client.id} value={client.id}>
+                                <MenuItem key={client.id ?? "no-id"} value={client.id ?? ""}>
                                     {client.name}
                                 </MenuItem>
                             ))}
                         </TextField>
+
 
                         <TextField
                             label="Business Name"

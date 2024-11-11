@@ -20,9 +20,9 @@ const OpportunitiesPage: React.FC = () => {
             <h1 className="text-center md:text-6xl text-4xl font-extrabold mb-10 mt-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-800 via-black-500 to-gray-600 ">
                 OPPORTUNITIES LIST
             </h1>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-start mb-4">
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                New Opportunity
+                    New Opportunity
                 </Button>
             </div>
             <OpportunitiesTable />
