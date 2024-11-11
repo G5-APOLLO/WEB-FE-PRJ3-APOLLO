@@ -1,15 +1,22 @@
+import React from "react";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/routes"; 
+import { QueryClient, QueryClientProvider } from "react-query"; // Importa QueryClient y QueryClientProvider
+import { router } from "./routes/routes";
 import Header from "./components/Header";
-import './App.css'
+import './App.css';
+
+
+const queryClient = new QueryClient();
 
 const App: React.FC = () => {
-  return (
-    <div className="app">
-    <Header />
-    <RouterProvider router={router} />
-  </div>
-  )
-}
+    return (
+        <QueryClientProvider client={queryClient}>
+            <div className="app">
+                <Header />
+                <RouterProvider router={router} />
+            </div>
+        </QueryClientProvider>
+    );
+};
 
-export default App
+export default App;

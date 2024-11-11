@@ -1,11 +1,11 @@
-// components/CreateClientModal.tsx
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
-import SuccessAlert from './SuccessAlert';
-import ErrorAlert from './ErrorAlert';
 import { createClient, fetchContactByName } from '../services/createClient.service';
 import { ListClientType, Contact } from '../types/ListClient.type';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 type CreateClientModalProps = {
   open: boolean;
@@ -48,14 +48,13 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
 
   const handleCreateClient = async () => {
     if (!isFormValid) {
-      setErrorAlertOpen(true);
+      toast.error("Please complete all required fields.");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-
       const contactIds: number[] = [];
       for (const contact of contacts) {
         const fetchedContact = await fetchContactByName(contact.firstName + ' ' + contact.lastName);
@@ -67,13 +66,13 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
       }
 
       const newClient = await createClient({ ...client, contacts: contactIds });
-      setSuccessAlertOpen(true);
+      toast.success("Client created successfully!");
       onClientCreated(newClient);
       setClient(initialClientState);
       setContacts([]);
       onClose();
     } catch (error) {
-      setErrorAlertOpen(true);
+      toast.error("Error creating client or contact not found.");
     } finally {
       setIsSubmitting(false);
     }
@@ -101,20 +100,11 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
             variant="contained"
             disabled={!isFormValid || isSubmitting}
           >
-            Save
+            {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
-      <SuccessAlert
-        open={successAlertOpen}
-        onClose={() => setSuccessAlertOpen(false)}
-        message="Client created successfully"
-      />
-      <ErrorAlert
-        open={errorAlertOpen}
-        onClose={() => setErrorAlertOpen(false)}
-        message="Error creating client or contact not found"
-      />
+      <ToastContainer /> {/* Añade el ToastContainer para mostrar notificaciones */}
     </>
   );
 };

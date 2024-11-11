@@ -1,5 +1,6 @@
-// services/clientService.ts
 import { ListClientType } from '../types/ListClient.type';
+import axios from 'axios';
+import { IOpportunity } from '../types/ListOpportunity.type';
 
 const API_URL = 'https://web-fe-prj3-api-apollo.onrender.com';
 
@@ -13,7 +14,7 @@ export const createClient = async (client: ListClientType) => {
   });
 
   if (!response.ok) {
-    throw new Error('Error al crear el cliente');
+    throw new Error('Error creating the client');
   }
 
   return response.json();
@@ -29,7 +30,7 @@ export const fetchClientById = async (id: number): Promise<ListClientType> => {
     });
   
     if (!response.ok) {
-      throw new Error('Error al obtener el cliente');
+      throw new Error('Error obtaining customer');
     }
   
     return response.json();
@@ -46,7 +47,7 @@ export const updateClient = async (client: ListClientType): Promise<ListClientTy
   });
 
   if (!response.ok) {
-    throw new Error('Error al actualizar el cliente');
+    throw new Error('Error updating the client');
   }
 
   return response.json();
@@ -77,4 +78,23 @@ export const fetchContactByName = async (name: string): Promise<{ id: number; na
     return null; // Devuelve `null` en caso de error
   }
 };
+export const fetchClients = async (): Promise<ListClientType[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/clients`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching clients:", error);
+    throw new Error("Customers could not be obtained");
+  }
+};
 
+
+export const createOpportunity = async (opportunity: Omit<IOpportunity, 'id'>): Promise<IOpportunity> => {
+  try {
+    const response = await axios.post(`${API_URL}/opportunities`, opportunity);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating opportunity:', error);
+    throw new Error('Failed to create opportunity');
+  }
+};
