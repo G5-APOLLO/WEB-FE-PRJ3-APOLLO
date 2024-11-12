@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Tooltip, Modal, Box, IconButton } from "@mui/material";
@@ -13,6 +12,7 @@ import { deleteOpportunityAndTracking } from '../services/oportunity.service'; /
 import { IOpportunity } from '../types/ListOpportunity.type';
 import CustomPagination from './CustomPagination';
 import OpportunityDetail from './OpportunityDetail';
+import CreateOpportunityModal from './CreateOpportunityModal';
 
 interface OpportunitiesTableProps {
   clientId?: number;
@@ -28,6 +28,18 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
   const [openOpportunityDetail, setOpenOpportunityDetail] = useState(false);
   const [selectedOpportunityId, setSelectedOpportunityId] = useState<number | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+
+
+  const handleOpenCreateModal = () => setIsCreateModalOpen(true);
+  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
+
+  const handleOpportunityCreated = (newOpportunity: IOpportunity) => {
+    setOpportunities((prevOpportunities) => [...prevOpportunities, newOpportunity]);
+    handleCloseCreateModal();
+  };
+
 
   const handleOpenUpdateModal = (opportunity: IOpportunity) => {
     setSelectedOpportunity(opportunity);
@@ -71,15 +83,14 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
     });
 
     if (result.isConfirmed) {
-      // Elimina la oportunidad de inmediato en el estado local
       setOpportunities(prevOpportunities => prevOpportunities.filter(opportunity => opportunity.id !== opportunityId));
 
       try {
-        // Intenta eliminar las actividades de seguimiento asociadas
+
         await deleteOpportunityAndTracking(opportunityId);
         Swal.fire('Deleted!', 'The opportunity has been deleted.', 'success');
       } catch (error) {
-        // Si falla la eliminación de actividades de seguimiento, reestablece el estado
+
         console.log(error);
         setOpportunities(prevOpportunities => [...prevOpportunities, prevOpportunities.find(opportunity => opportunity.id === opportunityId)!]);
         Swal.fire('Error', 'Failed to delete the tracking activities. Opportunity was not deleted.', 'error');
@@ -87,11 +98,13 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
     }
   };
 
+
   useEffect(() => {
     if (opportunityData) {
       setOpportunities(opportunityData);
     }
   }, [opportunityData]);
+
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 100 },
@@ -184,6 +197,11 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
 
   return (
     <div className="container mx-auto mt-10">
+      <div className="flex justify-start mb-4">
+        <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
+          New Opportunity
+        </Button>
+      </div>
       <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
         <DataGrid
           columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
@@ -209,6 +227,11 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
           }}
         />
       </div>
+      <CreateOpportunityModal
+        open={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+        onSuccess={handleOpportunityCreated}
+      />
       <UpdateOpportunityModal
         open={isUpdateModalOpen}
         onClose={handleCloseUpdateModal}

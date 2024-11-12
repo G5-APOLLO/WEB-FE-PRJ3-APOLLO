@@ -14,7 +14,7 @@ type CreateOpportunityModalProps = {
     onSuccess: (newOpportunity: IOpportunity) => void;
 };
 
-const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, onClose }) => {
+const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, onClose, onSuccess }) => {
     const [clients, setClients] = useState<ListClientType[]>([]);
     const [selectedClientId, setSelectedClientId] = useState<number | null>(0);
     const [businessName, setBusinessName] = useState<string>('');
@@ -27,9 +27,13 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
     const queryClient = useQueryClient();
 
     const mutation = useMutation(createOpportunity, {
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries('opportunities');
+
             toast.success("Opportunity created successfully!");
+
+            onSuccess(data);
+
             setSelectedClientId(0);
             setBusinessName('');
             setBusinessLine('Outsourcing Resources');
@@ -38,7 +42,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
             setEstimatedDate('');
             setTimeout(() => {
                 onClose();
-            }, 500); // 500ms puede ser suficiente, ajusta según necesites
+            }, 500);
         },
         onError: () => {
             toast.error("Failed to create opportunity.");
