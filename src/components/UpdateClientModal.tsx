@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchClientById, updateClient, fetchContactByName } from '../services/createClient.service';
 import { ListClientType, Contact } from '../types/ListClient.type';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type UpdateClientModalProps = {
@@ -136,7 +136,6 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer />
     </>
   );
 };

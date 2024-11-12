@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchOpportunityById, updateOpportunity } from '../services/oportunity.service';
 import { IOpportunity } from '../types/ListOpportunity.type';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -99,7 +99,6 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer />
     </>
   );
 };

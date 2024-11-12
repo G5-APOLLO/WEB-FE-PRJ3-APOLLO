@@ -4,7 +4,7 @@ import { IOpportunity } from '../types/ListOpportunity.type';
 import { fetchClients, createOpportunity } from '../services/createClient.service';
 import { ListClientType } from '../types/ListClient.type';
 import { useMutation, useQueryClient } from 'react-query';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type CreateOpportunityModalProps = {
@@ -197,8 +197,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                         {mutation.isLoading ? 'Saving...' : 'Save'}
                     </Button>
                 </DialogActions>
-            </Dialog>
-            <ToastContainer />
+            </Dialog>      
         </>
     );
 };

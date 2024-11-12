@@ -42,8 +42,8 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
     const columns: GridColDef[] = [
         { field: "id", headerName: "ID", width: 70 },
         {
-            field: "opportunityName",
-            headerName: "Opportunity Name",
+            field: "opportunityId",
+            headerName: "Opportunity ID",
             width: 150,
             renderCell: (params) => (
                 <Tooltip title={params.value}>
