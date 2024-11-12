@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 import { IOpportunity } from '../types/ListOpportunity.type';
 
@@ -9,12 +9,13 @@ type OpportunityFormProps = {
 
 const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange }) => {
   const statusOrder = ["Open", "In Study", "Purchase Order", "Finalized"];
+  const currentIndex = statusOrder.indexOf(opportunity.status);
 
-  const getStatusOptions = () => {
-    const currentIndex = statusOrder.indexOf(opportunity.status);
-    if (currentIndex === -1 || currentIndex === statusOrder.length - 1) return [opportunity.status];
-    return [opportunity.status, statusOrder[currentIndex + 1]];
-  };
+  const statusOptions = useRef<string[]>([
+    statusOrder[currentIndex - 1], // Previous status (if exists)
+    opportunity.status,            // Current status
+    statusOrder[currentIndex + 1],  // Next status (if exists)
+  ].filter(Boolean));      
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -87,10 +88,10 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         select
         required
       >
-        {getStatusOptions().map((status) => (
-          <MenuItem key={status} value={status}>
-            {status}
-          </MenuItem>
+      {statusOptions.current.map((status) => (
+        <MenuItem key={status} value={status}>
+          {status}
+        </MenuItem>
         ))}
       </TextField>
     </form>
