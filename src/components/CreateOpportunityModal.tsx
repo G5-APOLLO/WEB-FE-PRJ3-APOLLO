@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 type CreateOpportunityModalProps = {
     open: boolean;
     onClose: () => void;
@@ -58,15 +57,36 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
     }, [open]);
 
     const handleSave = () => {
-        if (
-            selectedClientId === null ||
-            businessName.trim() === "" ||
-            businessLine.trim() === "" ||
-            description.trim() === "" ||
-            !estimatedValue ||
-            estimatedDate.trim() === ""
-        ) {
-            toast.error("All fields are required.");
+        // Validaciones
+        if (selectedClientId === null || selectedClientId === 0) {
+            toast.error("Please select a valid client.");
+            return;
+        }
+
+        if (businessName.trim() === "" || businessName.length < 3) {
+            toast.error("Business Name must be at least 3 characters long.");
+            return;
+        }
+
+        if (businessLine.trim() === "") {
+            toast.error("Business Line is required.");
+            return;
+        }
+
+        if (description.trim() === "" || description.length < 10) {
+            toast.error("Description must be at least 10 characters long.");
+            return;
+        }
+
+        const estimatedValueNumber = parseFloat(estimatedValue);
+        if (isNaN(estimatedValueNumber) || estimatedValueNumber <= 0) {
+            toast.error("Estimated Business Value must be a positive number.");
+            return;
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(estimatedDate)) {
+            toast.error("Estimated Completion Date must be in the format YYYY-MM-DD.");
             return;
         }
 
@@ -76,7 +96,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
             businessName,
             businessLine: businessLine as IOpportunity['businessLine'],
             description,
-            estimatedValue: parseFloat(estimatedValue),
+            estimatedValue: estimatedValueNumber,
             estimatedDate,
             status,
         };
@@ -108,13 +128,13 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             ))}
                         </TextField>
 
-
                         <TextField
                             label="Business Name"
                             value={businessName}
                             onChange={(e) => setBusinessName(e.target.value)}
                             fullWidth
                             required
+                            helperText="Must be at least 3 characters long."
                         />
 
                         <TextField
@@ -139,6 +159,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             required
                             multiline
                             rows={4}
+                            helperText="Must be at least 10 characters long."
                         />
 
                         <TextField
@@ -148,6 +169,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             onChange={(e) => setEstimatedValue(e.target.value)}
                             fullWidth
                             required
+                            helperText="Must be a positive number."
                         />
 
                         <TextField
@@ -158,6 +180,7 @@ const CreateOpportunityModal: React.FC<CreateOpportunityModalProps> = ({ open, o
                             InputLabelProps={{ shrink: true }}
                             fullWidth
                             required
+                            helperText="Format: YYYY-MM-DD"
                         />
 
                         <TextField
