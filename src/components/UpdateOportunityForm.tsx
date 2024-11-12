@@ -8,13 +8,20 @@ type OpportunityFormProps = {
 };
 
 const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange }) => {
+  const statusOrder = ["Open", "In Study", "Purchase Order", "Finalized"];
+
+  const getStatusOptions = () => {
+    const currentIndex = statusOrder.indexOf(opportunity.status);
+    if (currentIndex === -1 || currentIndex === statusOrder.length - 1) return [opportunity.status];
+    return [opportunity.status, statusOrder[currentIndex + 1]];
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onChange({ ...opportunity, [name]: name === 'estimatedValue' ? Number(value) : value });
   };
-  
+
   return (
-    
     <form>
       <TextField
         label="Business Name"
@@ -23,7 +30,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
-        required={true}
+        required
       />
       <TextField
         label="Business Line"
@@ -33,9 +40,9 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         fullWidth
         margin="normal"
         select
-        required={true}
+        required
       >
-        <MenuItem value="Outsourcing Resources">Outsourcing Resource</MenuItem>
+        <MenuItem value="Outsourcing Resources">Outsourcing Resources</MenuItem>
         <MenuItem value="Web Development">Web Development</MenuItem>
         <MenuItem value="Mobile Development">Mobile Development</MenuItem>
         <MenuItem value="IT Consulting">IT Consulting</MenuItem>
@@ -47,7 +54,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         onChange={handleChange}
         fullWidth
         margin="normal"
-        required={true}
+        required
       />
       <TextField
         label="Estimated Value"
@@ -57,7 +64,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         fullWidth
         margin="normal"
         type="number"
-        required={true}
+        required
       />
       <TextField
         label="Estimated Date"
@@ -68,7 +75,7 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         margin="normal"
         type="date"
         InputLabelProps={{ shrink: true }}
-        required={true}
+        required
       />
       <TextField
         label="Status"
@@ -78,12 +85,13 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         fullWidth
         margin="normal"
         select
-        required={true}
+        required
       >
-        <MenuItem value="Open">Open</MenuItem>
-        <MenuItem value="In Study">In Study</MenuItem>
-        <MenuItem value="Purchase Order">Purchase Order</MenuItem>
-        <MenuItem value="Finalized">Finalized</MenuItem>
+        {getStatusOptions().map((status) => (
+          <MenuItem key={status} value={status}>
+            {status}
+          </MenuItem>
+        ))}
       </TextField>
     </form>
   );
