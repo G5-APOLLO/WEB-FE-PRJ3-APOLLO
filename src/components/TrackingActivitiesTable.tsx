@@ -28,10 +28,17 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
     const [activities, setActivities] = useState<TrackingActivity[]>(activitiesData || []);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
 
-    const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity((deletedId) => {
-        // Update the state by filtering out the deleted activity
-        setActivities(prevActivities => prevActivities.filter(activity => activity.id !== deletedId));
-    });
+    const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity(
+        (deletedId) => {
+          // Success handling: update component state
+          setActivities((prevActivities) => prevActivities.filter((activity) => activity.id !== deletedId));
+          Swal.fire('Deleted!', 'The activity has been deleted.', 'success');
+        },
+        () => {
+          // Error handling: display error message
+          Swal.fire('Error', 'There was an issue deleting the activity.', 'error');
+        }
+      );
     
     useEffect(() => {
         if (activitiesData) {
@@ -51,12 +58,7 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
         });
 
         if (result.isConfirmed) {
-            try {
-                await deleteTrackingActivity(id);
-                Swal.fire('Deleted!', 'The opportunity has been deleted.', 'success');
-            } catch (error) {
-                Swal.fire('Error', 'There was an issue deleting the activity.', 'error');
-            }
+            deleteTrackingActivity(id);
         }
     };
 
