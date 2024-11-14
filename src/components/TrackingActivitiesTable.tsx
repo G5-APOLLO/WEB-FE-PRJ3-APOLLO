@@ -5,6 +5,8 @@ import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { useGetTrackingActivities } from '../hooks/useGetTrackingActivities';
 import CustomPagination from './CustomPagination';
+import Swal from 'sweetalert2';
+import { useDeleteTrackingActivity } from '../hooks/useDeleteTrackingActivites';
 
 interface TrackingActivitiesTableProps {
     opportunityId?: number;
@@ -26,14 +28,36 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
     const [activities, setActivities] = useState<TrackingActivity[]>(activitiesData || []);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
 
+    const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity((deletedId) => {
+        // Update the state by filtering out the deleted activity
+        setActivities(prevActivities => prevActivities.filter(activity => activity.id !== deletedId));
+    });
+    
     useEffect(() => {
         if (activitiesData) {
             setActivities(activitiesData);
         }
     }, [activitiesData]);
 
-    const handleDelete = (id: number) => {
-        console.log(`Delete activity with ID: ${id}`);
+    const handleDelete = async (id: number) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action will permanently delete this activity!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await deleteTrackingActivity(id);
+                Swal.fire('Deleted!', 'The opportunity has been deleted.', 'success');
+            } catch (error) {
+                Swal.fire('Error', 'There was an issue deleting the activity.', 'error');
+            }
+        }
     };
 
     if (isLoading) return <Spinner />;
