@@ -8,7 +8,7 @@ import ErrorComponent from './Error-component';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
 import UpdateOpportunityModal from './UpdateOpportunityModal';
-import { deleteOpportunityAndTracking } from '../services/oportunity.service'; // Assume this service is defined
+import { deleteOpportunityAndTracking } from '../services/oportunity.service'; 
 import { IOpportunity } from '../types/ListOpportunity.type';
 import CustomPagination from './CustomPagination';
 import OpportunityDetail from './OpportunityDetail';
