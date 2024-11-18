@@ -145,35 +145,35 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
     },
     ...(showUpdateDelete
       ? [
-          {
-            field: 'update',
-            headerName: 'Update',
-            width: 125,
-            renderCell: (params: any) => (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleOpenUpdateModal(params.row as TrackingActivity)}
-              >
-                Update
-              </Button>
-            ),
-          },
-          {
-            field: "deleteAction",
-            headerName: "Delete",
-            width: 120,
-            renderCell: (params: any) => (
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleDelete(params.row.id)}
-              >
-                Delete
-              </Button>
-            ),
-          },
-        ]
+        {
+          field: 'update',
+          headerName: 'Update',
+          width: 125,
+          renderCell: (params: any) => (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpenUpdateModal(params.row as TrackingActivity)}
+            >
+              Update
+            </Button>
+          ),
+        },
+        {
+          field: "deleteAction",
+          headerName: "Delete",
+          width: 120,
+          renderCell: (params: any) => (
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleDelete(params.row.id)}
+            >
+              Delete
+            </Button>
+          ),
+        },
+      ]
       : []),
   ];
 
@@ -184,11 +184,12 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
 
   return (
     <div className="container mx-auto mt-10">
-      <div className="flex justify-between mb-4">
+      {showUpdateDelete && <div className="flex justify-between mb-4">
         <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
           Create Tracking
         </Button>
       </div>
+      }
       <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
         <DataGrid
           columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
