@@ -8,7 +8,7 @@ import ErrorComponent from './Error-component';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import { formatCurrency } from '../utils/formatCurrency';
 import UpdateOpportunityModal from './UpdateOpportunityModal';
-import { deleteOpportunityAndTracking } from '../services/oportunity.service'; 
+import { deleteOpportunityAndTracking } from '../services/oportunity.service';
 import { IOpportunity } from '../types/ListOpportunity.type';
 import CustomPagination from './CustomPagination';
 import OpportunityDetail from './OpportunityDetail';
@@ -143,7 +143,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
     },
     { field: "estimatedDate", headerName: "Estimated Date", width: 150 },
     { field: "status", headerName: "Status", width: 150 },
-   ...(showSeguimiento
+    ...(showSeguimiento
       ? [{
         field: "Tracking",
         headerName: "Tracking",
@@ -173,7 +173,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
             Update
           </Button>
         ),
-      },{
+      }, {
         field: "delete",
         headerName: "Delete",
         width: 125,
@@ -187,7 +187,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
           </Button>
         )
       }
-    ])
+      ])
   ];
 
   if (isLoading) return <Spinner />;
@@ -196,11 +196,14 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
   const totalPages = Math.ceil(opportunities.length / paginationModel.pageSize);
 
   return (
+
     <div className="container mx-auto mt-10">
       <div className="flex justify-start mb-4">
-        <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
-          New Opportunity
-        </Button>
+        {!showSeguimiento &&
+          <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
+            New Opportunity
+          </Button>
+        }
       </div>
       <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
         <DataGrid
