@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, MenuItem } from '@mui/material';
-import { TrackingActivity } from './TrackingActivitiesTable';
+import { TrackingActivity } from '../types/TrackingActivity.type';
 
 interface UpdateTrackingActivityFormProps {
   activity: TrackingActivity;
