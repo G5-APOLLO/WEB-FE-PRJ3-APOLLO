@@ -69,7 +69,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
       setClient(initialClientState);
       setContacts([]);
       onClose();
-    } catch (error) {
+    } catch {
       toast.error("Error creating client or contact not found.");
     } finally {
       setIsSubmitting(false);
