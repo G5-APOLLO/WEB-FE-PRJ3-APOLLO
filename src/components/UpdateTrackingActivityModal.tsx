@@ -4,7 +4,7 @@ import UpdateTrackingActivityForm from './UpdateTrackingActivityForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchTrackingActivityById, updateTrackingActivity } from '../services/trackingActivity.service';
-import { TrackingActivity } from './TrackingActivitiesTable';
+import { TrackingActivity } from '../types/TrackingActivity.type';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
