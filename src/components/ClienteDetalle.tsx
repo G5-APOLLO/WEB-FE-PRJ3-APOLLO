@@ -48,7 +48,9 @@ const ClienteDetalle: React.FC<ClienteDetalleProps> = ({ clientID }) => {
 
       {/* Renderiza la sección inferior */}
       {selectedOpportunity && (
-        <TrackingActivitiesTable opportunityId={selectedOpportunity.id} />
+        <TrackingActivitiesTable 
+        opportunityId={selectedOpportunity.id} 
+        showUpdateDelete= {false}/>
       )}
     </div>
   );

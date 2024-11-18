@@ -13,9 +13,10 @@ import CreateTrackingActivityModal from './CreateTrackingModal';
 
 interface TrackingActivitiesTableProps {
   opportunityId?: number;
+  showUpdateDelete?: boolean;
 }
 
-function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps) {
+function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: TrackingActivitiesTableProps) {
   const { data: activitiesData, isError, isLoading } = useGetTrackingActivities(opportunityId ?? 0);
   const [activities, setActivities] = useState<TrackingActivity[]>(activitiesData || []);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
@@ -142,34 +143,38 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
         </Tooltip>
       )
     },
-    {
-      field: 'update',
-      headerName: 'Update',
-      width: 125,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleOpenUpdateModal(params.row as TrackingActivity)}
-        >
-          Update
-        </Button>
-      ),
-    },
-    {
-      field: "deleteAction",
-      headerName: "Delete",
-      width: 120,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleDelete(params.row.id)}
-        >
-          Delete
-        </Button>
-      ),
-    },
+    ...(showUpdateDelete
+      ? [
+          {
+            field: 'update',
+            headerName: 'Update',
+            width: 125,
+            renderCell: (params: any) => (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleOpenUpdateModal(params.row as TrackingActivity)}
+              >
+                Update
+              </Button>
+            ),
+          },
+          {
+            field: "deleteAction",
+            headerName: "Delete",
+            width: 120,
+            renderCell: (params: any) => (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDelete(params.row.id)}
+              >
+                Delete
+              </Button>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const totalPages = Math.ceil(activities.length / paginationModel.pageSize);

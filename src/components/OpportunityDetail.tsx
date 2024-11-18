@@ -19,6 +19,7 @@ const OpportunityDetail: React.FC<OpportunityDetailProps> = ({opportunityId}) =>
             {/* Renderiza la sección inferior*/}
                 <TrackingActivitiesTable
                 opportunityId={opportunityId}
+                showUpdateDelete= {false}
             />
 
         </div>
