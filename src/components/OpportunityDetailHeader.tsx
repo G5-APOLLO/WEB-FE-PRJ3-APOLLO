@@ -25,6 +25,11 @@ const OpportunityDetailHeader: React.FC<OpportunityDetailHeaderProps> = ({ oppor
           <p className="text-base font-medium text-gray-700"><strong>ID:</strong></p>
           <p className="text-base text-gray-600">{opportunity.id}</p>
         </div>
+
+        <div className="flex justify-between border-b pb-2">
+          <p className="text-base font-medium text-gray-700"><strong>Client ID:</strong></p>
+          <p className="text-base text-gray-600">{opportunity.clientIds}</p>
+        </div>
         
         <div className="flex justify-between border-b pb-2">
           <p className="text-base font-medium text-gray-700"><strong>Name:</strong></p>
