@@ -13,8 +13,8 @@ interface CreateTrackingActivityModalProps {
   onCreateSuccess: (newActivity: TrackingActivity) => void;
 }
 
-const CreateTrackingActivityModal: React.FC<CreateTrackingActivityModalProps> = ({ open, onClose }) => {
-  const { createActivity, isLoading } = useCreateTrackingActivity(onClose);
+const CreateTrackingActivityModal: React.FC<CreateTrackingActivityModalProps> = ({ open, onClose, onCreateSuccess }) => {
+  const { createActivity, isLoading } = useCreateTrackingActivity(onClose, onCreateSuccess);
 
   const handleSave = (activity: TrackingActivity) => {
     createActivity(activity);

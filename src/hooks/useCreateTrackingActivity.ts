@@ -1,15 +1,14 @@
 // hooks/useCreateTrackingActivity.ts
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { createTrackingActivity, fetchOpportunityByName } from '../services/trackingActivity.service';
 import { TrackingActivity } from '../types/TrackingActivity.type';
 
-export const useCreateTrackingActivity = (onClose: () => void) => {
-  const queryClient = useQueryClient();
+export const useCreateTrackingActivity = (onClose: () => void, onCreateSuccess: (newActivity: TrackingActivity) => void) => {
 
   const mutation = useMutation(createTrackingActivity, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('trackingActivities');
+    onSuccess: (newActivity) => {
+      onCreateSuccess(newActivity);
       toast.success("Activity created successfully!");
       onClose(); 
     },

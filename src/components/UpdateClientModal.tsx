@@ -42,7 +42,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
 
         const contactsData = await Promise.all(contactPromises);
         setContacts(contactsData);
-      } catch (error) {
+      } catch {
         toast.error("Error loading client data");
       } finally {
         setLoading(false);
@@ -97,7 +97,7 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
         onClientUpdated(updatedClient);
         onClose();
       }
-    } catch (error) {
+    } catch {
       toast.error("Error updating client or contact not found");
     } finally {
       setIsSubmitting(false);
