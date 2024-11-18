@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import ClientForm from './ClientForm';
+import ClientForm from './UpdateClientForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
 import { fetchClientById, updateClient, fetchContactByName } from '../services/createClient.service';
