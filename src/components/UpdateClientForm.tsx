@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ListClientType, Contact } from '../types/ListClient.type';
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, MenuItem } from '@mui/material';
 
 type UpdateClientFormProps = {
     client: ListClientType;
@@ -8,9 +8,10 @@ type UpdateClientFormProps = {
     onContactsChange: (contacts: Contact[]) => void;
     onFormValidityChange: (isValid: boolean) => void;
     contacts?: Contact[];
+    availableClients: ListClientType[];
 };
 
-const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, onContactsChange, onFormValidityChange, contacts = [] }) => {
+const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, onContactsChange, onFormValidityChange, contacts = [], availableClients }) => {
     const [errors, setErrors] = useState({
         nit: '',
         name: '',
@@ -83,34 +84,28 @@ const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, o
         onChange({ ...client, [name]: value });
     };
 
+    const handleContactSelect = (index: number, clientName: string) => {
+        const selectedClient = availableClients.find(client => client.name === clientName);
+        if (!selectedClient) return;
+
+        const updatedContacts = [...localContacts];
+        updatedContacts[index] = {
+            firstName: selectedClient.name.split(" ")[0] || "",
+            lastName: selectedClient.name.split(" ")[1] || "",
+            phone: selectedClient.phone,
+            email: selectedClient.email
+        };
+
+        setLocalContacts(updatedContacts);
+        onContactsChange(updatedContacts);
+    };
+
     const handleContactChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         const updatedContacts = [...localContacts];
         updatedContacts[index] = { ...updatedContacts[index], [name]: value };
         setLocalContacts(updatedContacts);
-        onContactsChange(updatedContacts);  // Asegura que el cambio se comunique al componente superior
-
-        const updatedErrors = [...contactErrors];
-        switch (name) {
-            case 'firstName':
-            case 'lastName':
-                if (!/^[a-zA-Z\s]{1,30}$/.test(value)) {
-                    updatedErrors[index] = { ...updatedErrors[index], [name]: 'Debe ser solo letras y hasta 30 caracteres' };
-                } else {
-                    updatedErrors[index] = { ...updatedErrors[index], [name]: '' };
-                }
-                break;
-            case 'email':
-                if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
-                    updatedErrors[index] = { ...updatedErrors[index], email: 'Formato de correo electrónico inválido' };
-                } else {
-                    updatedErrors[index] = { ...updatedErrors[index], email: '' };
-                }
-                break;
-            default:
-                break;
-        }
-        setContactErrors(updatedErrors);
+        onContactsChange(updatedContacts);
     };
 
     const addContact = () => {
@@ -140,43 +135,68 @@ const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, o
             <TextField label="Phone" name="phone" type="text" value={client.phone} onChange={handleInputChange} error={Boolean(errors.phone)} helperText={errors.phone} fullWidth />
             <TextField label="Email" name="email" type="email" value={client.email} onChange={handleInputChange} error={Boolean(errors.email)} helperText={errors.email} fullWidth required />
 
-            {localContacts.map((contact, index) => (
-                <Box key={index} sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '8px', opacity: 0.6 }}>
-                    <TextField
-                        label="First Name"
-                        name="firstName"
-                        value={contact.firstName}
-                        onChange={(e) => handleContactChange(index, e)}
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                        label="Last Name"
-                        name="lastName"
-                        value={contact.lastName}
-                        onChange={(e) => handleContactChange(index, e)}
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                        label="Phone"
-                        name="phone"
-                        value={contact.phone}
-                        onChange={(e) => handleContactChange(index, e)}
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        value={contact.email}
-                        onChange={(e) => handleContactChange(index, e)}
-                        fullWidth
-                        InputProps={{ readOnly: true }}
-                    />
-                    <Button color="secondary" onClick={() => removeContact(index)}>Remove Contact</Button>
-                </Box>
-            ))}
+            {localContacts.map((contact, index) => {
+                const isExistingContact = contacts.some(existingContact => 
+                    existingContact.firstName === contact.firstName &&
+                    existingContact.lastName === contact.lastName &&
+                    existingContact.phone === contact.phone &&
+                    existingContact.email === contact.email
+                );
+
+                return (
+                    <Box key={index} sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '8px', opacity: isExistingContact ? 0.6 : 1 }}>
+                        <TextField
+                            select
+                            label="Contact Name"
+                            value={contact.firstName + " " + contact.lastName || ''}
+                            onChange={(e) => handleContactSelect(index, e.target.value)}
+                            fullWidth
+                            InputProps={{ readOnly: isExistingContact }}
+                        >
+                            {availableClients.map((client) => (
+                                <MenuItem key={client.id} value={client.name}>
+                                    {client.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField
+                            label="First Name"
+                            name="firstName"
+                            value={contact.firstName}
+                            onChange={(e) => handleContactChange(index, e)}
+                            fullWidth
+                            InputProps={{ readOnly: isExistingContact }}
+                        />
+                        <TextField
+                            label="Last Name"
+                            name="lastName"
+                            value={contact.lastName}
+                            onChange={(e) => handleContactChange(index, e)}
+                            fullWidth
+                            InputProps={{ readOnly: isExistingContact }}
+                        />
+                        <TextField
+                            label="Phone"
+                            name="phone"
+                            value={contact.phone}
+                            onChange={(e) => handleContactChange(index, e)}
+                            fullWidth
+                            InputProps={{ readOnly: isExistingContact }}
+                        />
+                        <TextField
+                            label="Email"
+                            name="email"
+                            value={contact.email}
+                            onChange={(e) => handleContactChange(index, e)}
+                            fullWidth
+                            InputProps={{ readOnly: isExistingContact }}
+                        />
+                        {!isExistingContact && (
+                            <Button color="secondary" onClick={() => removeContact(index)}>Remove Contact</Button>
+                        )}
+                    </Box>
+                );
+            })}
             <Button color="primary" onClick={addContact}>Add Contact</Button>
         </Box>
     );

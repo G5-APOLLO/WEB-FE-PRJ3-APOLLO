@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ListClientType, Contact } from '../types/ListClient.type';
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, MenuItem } from '@mui/material';
 
 type ClientFormProps = {
   client: ListClientType;
@@ -8,9 +8,10 @@ type ClientFormProps = {
   onContactsChange: (contacts: Contact[]) => void;
   onFormValidityChange: (isValid: boolean) => void;
   contacts?: Contact[];
+  availableClients: ListClientType[]; // Nuevo prop para los clientes disponibles
 };
 
-const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsChange, onFormValidityChange, contacts = [] }) => {
+const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsChange, onFormValidityChange, contacts = [], availableClients }) => {
   const [errors, setErrors] = useState({
     nit: '',
     name: '',
@@ -76,14 +77,6 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsCha
         }
         break;
 
-      // case 'phone':
-      //   if (!/^\d{10}$/.test(value)) {
-      //     setErrors((prev) => ({ ...prev, phone: 'Celular debe ser un número de 10 dígitos' }));
-      //   } else {
-      //     setErrors((prev) => ({ ...prev, phone: '' }));
-      //   }
-      //   break;
-
       default:
         break;
     }
@@ -91,42 +84,30 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsCha
     onChange({ ...client, [name]: value });
   };
 
-  const handleContactChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleContactSelect = (index: number, clientName: string) => {
+    const selectedClient = availableClients.find(client => client.name === clientName);
+    if (!selectedClient) return;
+
+    const updatedContacts = [...localContacts];
+    updatedContacts[index] = {
+      firstName: selectedClient.name.split(" ")[0] || "",
+      lastName: selectedClient.name.split(" ")[1] || "",
+      phone: selectedClient.phone,
+      email: selectedClient.email
+    };
+
+    setLocalContacts(updatedContacts);
+    onContactsChange(updatedContacts);
+  };
+
+  const handleContactChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const updatedContacts = [...localContacts];
     updatedContacts[index] = { ...updatedContacts[index], [name]: value };
     setLocalContacts(updatedContacts);
-    onContactsChange(updatedContacts);  // Asegura que el cambio se comunique al componente superior
+    onContactsChange(updatedContacts);
+};
 
-    const updatedErrors = [...contactErrors];
-    switch (name) {
-      case 'firstName':
-      case 'lastName':
-        if (!/^[a-zA-Z\s]{1,30}$/.test(value)) {
-          updatedErrors[index] = { ...updatedErrors[index], [name]: 'Debe ser solo letras y hasta 30 caracteres' };
-        } else {
-          updatedErrors[index] = { ...updatedErrors[index], [name]: '' };
-        }
-        break;
-      // case 'phone':
-      //   if (!/^\d{10}$/.test(value)) {
-      //     updatedErrors[index] = { ...updatedErrors[index], phone: 'Celular debe ser un número de 10 dígitos' };
-      //   } else {
-      //     updatedErrors[index] = { ...updatedErrors[index], phone: '' };
-      //   }
-      //   break;
-      case 'email':
-        if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
-          updatedErrors[index] = { ...updatedErrors[index], email: 'Formato de correo electrónico inválido' };
-        } else {
-          updatedErrors[index] = { ...updatedErrors[index], email: '' };
-        }
-        break;
-      default:
-        break;
-    }
-    setContactErrors(updatedErrors);
-  };
 
   const addContact = () => {
     const newContact = { firstName: '', lastName: '', phone: '', email: '' };
@@ -138,7 +119,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsCha
     const updatedContacts = [...localContacts];
     updatedContacts.splice(index, 1);
     setLocalContacts(updatedContacts);
-    onContactsChange(updatedContacts);  // Comunica el cambio al componente superior
+    onContactsChange(updatedContacts);
 
     const updatedErrors = [...contactErrors];
     updatedErrors.splice(index, 1);
@@ -157,10 +138,23 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onChange, onContactsCha
 
       {localContacts.map((contact, index) => (
         <Box key={index} sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '8px' }}>
-          <TextField label="First Name" name="firstName" value={contact.firstName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.firstName)} helperText={contactErrors[index]?.firstName} fullWidth required sx={{ mb: 2 }}/>
-          <TextField label="Last Name" name="lastName" value={contact.lastName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.lastName)} helperText={contactErrors[index]?.lastName} fullWidth sx={{ mb: 2 }}/>
-          <TextField label="Phone" name="phone" value={contact.phone} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.phone)} helperText={contactErrors[index]?.phone} fullWidth required sx={{ mb: 2 }}/>
-          <TextField label="Email" name="email" value={contact.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.email)} helperText={contactErrors[index]?.email} fullWidth required sx={{ mb: 2 }}/>
+          <TextField
+            select
+            label="Contact Name"
+            value={contact.firstName + " " + contact.lastName || ''}
+            onChange={(e) => handleContactSelect(index, e.target.value)}
+            fullWidth
+          >
+            {availableClients.map((client) => (
+              <MenuItem key={client.id} value={client.name}>
+                {client.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField label="First Name" name="firstName" value={contact.firstName} onChange={(e) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.firstName)} helperText={contactErrors[index]?.firstName} fullWidth required sx={{ mb: 2 }} />
+          <TextField label="Last Name" name="lastName" value={contact.lastName} onChange={(e) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.lastName)} helperText={contactErrors[index]?.lastName} fullWidth sx={{ mb: 2 }} />
+          <TextField label="Phone" name="phone" value={contact.phone} onChange={(e) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.phone)} helperText={contactErrors[index]?.phone} fullWidth required sx={{ mb: 2 }} />
+          <TextField label="Email" name="email" value={contact.email} onChange={(e) => handleContactChange(index, e)} error={Boolean(contactErrors[index]?.email)} helperText={contactErrors[index]?.email} fullWidth required sx={{ mb: 2 }} />
           <Button color="secondary" onClick={() => removeContact(index)}>Remove Contact</Button>
         </Box>
       ))}

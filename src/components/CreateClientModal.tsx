@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import ClientForm from './ClientForm';
-import { createClient, fetchContactByName } from '../services/createClient.service';
+import { createClient, fetchClients, fetchContactByName } from '../services/createClient.service';
 import { ListClientType, Contact } from '../types/ListClient.type';
-import { toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 type CreateClientModalProps = {
   open: boolean;
@@ -31,6 +30,23 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableClients, setAvailableClients] = useState<ListClientType[]>([]); // Nueva lista para clientes disponibles
+
+  useEffect(() => {
+    // Obtener la lista de clientes disponibles al abrir el modal
+    const fetchAvailableClients = async () => {
+      try {
+        const clients = await fetchClients(); // Asumimos que `fetchClients` obtiene todos los clientes
+        setAvailableClients(clients);
+      } catch (error) {
+        toast.error("Error fetching available clients.");
+      }
+    };
+
+    if (open) {
+      fetchAvailableClients();
+    }
+  }, [open]);
 
   const handleClientChange = (updatedClient: ListClientType) => {
     setClient(updatedClient);
@@ -86,6 +102,8 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
             onChange={handleClientChange}
             onContactsChange={handleContactsChange}
             onFormValidityChange={handleFormValidityChange}
+            contacts={contacts}
+            availableClients={availableClients} // Pasamos `availableClients` a `ClientForm`
           />
         </DialogContent>
         <DialogActions>

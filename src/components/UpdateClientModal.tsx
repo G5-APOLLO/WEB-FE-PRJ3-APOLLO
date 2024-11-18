@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import ClientForm from './UpdateClientForm';
+import UpdateClientForm from './UpdateClientForm';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
-import { fetchClientById, updateClient, fetchContactByName } from '../services/createClient.service';
+import { fetchClientById, updateClient, fetchClients } from '../services/createClient.service';
 import { ListClientType, Contact } from '../types/ListClient.type';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +18,7 @@ type UpdateClientModalProps = {
 const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, clientId, onClientUpdated }) => {
   const [client, setClient] = useState<ListClientType | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [availableClients, setAvailableClients] = useState<ListClientType[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,8 +50,18 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
       }
     };
 
+    const loadAvailableClients = async () => {
+      try {
+        const clients = await fetchClients();
+        setAvailableClients(clients);
+      } catch {
+        toast.error("Error fetching clients for selection");
+      }
+    };
+
     if (open && clientId) {
       fetchClientData();
+      loadAvailableClients();
     }
   }, [clientId, open]);
 
@@ -84,15 +95,15 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
       if (client) {
         const contactIds = await Promise.all(
           contacts.map(async (contact) => {
-            const contactData = await fetchContactByName(contact.firstName);
-            if (!contactData || !contactData.id) {
+            const contactData = await fetchClients();
+            if (!contactData || !contactData.some(c => c.name === contact.firstName)) {
               throw new Error(`Contact "${contact.firstName}" not found`);
             }
-            return contactData.id;
+            return contactData.find(c => c.name === contact.firstName)?.id;
           })
         );
 
-        const updatedClient = await updateClient({ ...client, contacts: contactIds });
+        const updatedClient = await updateClient({ ...client, contacts: contactIds as number[] });
         toast.success("Client updated successfully");
         onClientUpdated(updatedClient);
         onClose();
@@ -104,39 +115,36 @@ const UpdateClientModal: React.FC<UpdateClientModalProps> = ({ open, onClose, cl
     }
   };
 
-
-
   return (
-    <>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle className="text-center text-2xl font-bold">Update Client</DialogTitle>
-        <DialogContent dividers>
-          {loading ? (
-            <Spinner />
-          ) : error ? (
-            <ErrorComponent message={error} />
-          ) : client ? (
-            <ClientForm
-              client={client}
-              onChange={handleClientChange}
-              onContactsChange={handleContactsChange}
-              onFormValidityChange={handleFormValidityChange}
-              contacts={contacts}
-            />
-          ) : (
-            <p>Error: Client not found</p>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateClient} color="primary" variant="contained" disabled={!isFormValid || isSubmitting}>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle className="text-center text-2xl font-bold">Update Client</DialogTitle>
+      <DialogContent dividers>
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <ErrorComponent message={error} />
+        ) : client ? (
+          <UpdateClientForm
+            client={client}
+            onChange={handleClientChange}
+            onContactsChange={handleContactsChange}
+            onFormValidityChange={handleFormValidityChange}
+            contacts={contacts}
+            availableClients={availableClients} // Pass the available clients here
+          />
+        ) : (
+          <p>Error: Client not found</p>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleUpdateClient} color="primary" variant="contained" disabled={!isFormValid || isSubmitting}>
+          Update
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
