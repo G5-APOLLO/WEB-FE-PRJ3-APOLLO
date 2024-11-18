@@ -143,34 +143,7 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
     },
     { field: "estimatedDate", headerName: "Estimated Date", width: 150 },
     { field: "status", headerName: "Status", width: 150 },
-    {
-      field: "update",
-      headerName: "Update",
-      width: 125,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleOpenUpdateModal(params.row as IOpportunity)}
-        >
-          Update
-        </Button>
-      ),
-    },
-    {
-      field: "delete",
-      headerName: "Delete",
-      width: 125,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleDeleteOpportunity(params.row.id)}
-        >
-          Delete
-        </Button>
-      )
-    }, ...(showSeguimiento
+   ...(showSeguimiento
       ? [{
         field: "Tracking",
         headerName: "Tracking",
@@ -187,7 +160,34 @@ function OpportunitiesTable({ clientId, showSeguimiento = false, onSeguimientoCl
           </Button>
         ),
       }]
-      : [])
+      : [{
+        field: "update",
+        headerName: "Update",
+        width: 125,
+        renderCell: (params: any) => (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleOpenUpdateModal(params.row as IOpportunity)}
+          >
+            Update
+          </Button>
+        ),
+      },{
+        field: "delete",
+        headerName: "Delete",
+        width: 125,
+        renderCell: (params: any) => (
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteOpportunity(params.row.id)}
+          >
+            Delete
+          </Button>
+        )
+      }
+    ])
   ];
 
   if (isLoading) return <Spinner />;
