@@ -8,20 +8,11 @@ import CustomPagination from './CustomPagination';
 import UpdateTrackingActivityModal from './UpdateTrackingActivityModal';
 import Swal from 'sweetalert2';
 import { useDeleteTrackingActivity } from '../hooks/useDeleteTrackingActivites';
+import { TrackingActivity } from '../types/TrackingActivity.type';
+import CreateTrackingActivityModal from './CreateTrackingModal';
 
 interface TrackingActivitiesTableProps {
   opportunityId?: number;
-}
-
-export interface TrackingActivity {
-  id: number;
-  opportunityId: number;
-  opportunityName: string;
-  contactType: string;
-  contactDate: string;
-  clientContact: string;
-  salesExecutive: string;
-  description: string;
 }
 
 function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps) {
@@ -30,24 +21,32 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 });
   const [selectedActivity, setSelectedActivity] = useState<TrackingActivity | null>(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity(
-        (deletedId) => {
-          // Success handling: update component state
-          setActivities((prevActivities) => prevActivities.filter((activity) => activity.id !== deletedId));
-          Swal.fire('Deleted!', 'The activity has been deleted.', 'success');
-        },
-        () => {
-          // Error handling: display error message
-          Swal.fire('Error', 'There was an issue deleting the activity.', 'error');
-        }
-      );
-    
+  const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity(
+    (deletedId) => {
+      // Success handling: update component state
+      setActivities((prevActivities) => prevActivities.filter((activity) => activity.id !== deletedId));
+      Swal.fire('Deleted!', 'The activity has been deleted.', 'success');
+    },
+    () => {
+      // Error handling: display error message
+      Swal.fire('Error', 'There was an issue deleting the activity.', 'error');
+    }
+  );
+
   useEffect(() => {
     if (activitiesData) {
       setActivities(activitiesData);
     }
   }, [activitiesData]);
+
+  const handleOpenCreateModal = () => setIsCreateModalOpen(true);
+  const handleCloseCreateModal = () => setIsCreateModalOpen(false);
+
+  const handleActivityCreated = (newActivity: TrackingActivity) => {
+    setActivities((prevActivities) => [...prevActivities, newActivity]);
+  };
 
   const handleOpenUpdateModal = (activity: TrackingActivity) => {
     setSelectedActivity(activity);
@@ -67,24 +66,24 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
     );
   };
 
-    const handleDelete = async (id: number) => {
-        const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action will permanently delete this activity!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-        });
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action will permanently delete this activity!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
 
-        if (result.isConfirmed) {
-            deleteTrackingActivity(id);
-        }
-    };
+    if (result.isConfirmed) {
+      deleteTrackingActivity(id);
+    }
+  };
 
-    if (isLoading) return <Spinner />;
-    if (isError) return <ErrorComponent message="Error loading tracking activities" />;
+  if (isLoading) return <Spinner />;
+  if (isError) return <ErrorComponent message="Error loading tracking activities" />;
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -158,7 +157,7 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
       ),
     },
     {
-      field: "deleteAction",  
+      field: "deleteAction",
       headerName: "Delete",
       width: 120,
       renderCell: (params) => (
@@ -180,6 +179,11 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
 
   return (
     <div className="container mx-auto mt-10">
+      <div className="flex justify-between mb-4">
+        <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
+          Create Tracking
+        </Button>
+      </div>
       <div className="w-full min-h-[10rem] max-h-[40rem] overflow-y-auto">
         <DataGrid
           columns={columns.map(column => column.field === 'id' ? { ...column, width: 65 } : { ...column, flex: 1 })}
@@ -213,6 +217,11 @@ function TrackingActivitiesTable({ opportunityId }: TrackingActivitiesTableProps
           onActivityUpdated={handleActivityUpdated}
         />
       )}
+      <CreateTrackingActivityModal
+        open={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+        onCreateSuccess={handleActivityCreated}
+      />
     </div>
   );
 }
