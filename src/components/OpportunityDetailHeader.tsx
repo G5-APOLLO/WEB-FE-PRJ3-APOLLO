@@ -1,21 +1,18 @@
 import React from 'react';
-
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import Spinner from './Spinner';
 import ErrorComponent from './Error-component';
 
 interface OpportunityDetailHeaderProps {
-    opportunityId: number;
-  }
-
+  opportunityId: number;
+}
 
 const OpportunityDetailHeader: React.FC<OpportunityDetailHeaderProps> = ({ opportunityId }) => {
-    const { data: opportunities, isLoading, isError } = useGetOpportunities();
-    const opportunity = opportunities?.find(op => op.id === opportunityId);
-  
-    if (isLoading) return <Spinner />;
-    if (isError || !opportunity) return <ErrorComponent message="Opportunity not found" />;
-  
+  const { data: opportunities, isLoading, isError } = useGetOpportunities();
+  const opportunity = opportunities?.find(op => op.id === opportunityId);
+
+  if (isLoading) return <Spinner />;
+  if (isError || !opportunity) return <ErrorComponent message="Opportunity not found" />;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -23,6 +20,12 @@ const OpportunityDetailHeader: React.FC<OpportunityDetailHeaderProps> = ({ oppor
       
       {/* Información de la oportunidad */}
       <div className="space-y-4">
+        {/* Mostrar el ID de la oportunidad */}
+        <div className="flex justify-between border-b pb-2">
+          <p className="text-base font-medium text-gray-700"><strong>ID:</strong></p>
+          <p className="text-base text-gray-600">{opportunity.id}</p>
+        </div>
+        
         <div className="flex justify-between border-b pb-2">
           <p className="text-base font-medium text-gray-700"><strong>Name:</strong></p>
           <p className="text-base text-gray-600">{opportunity.businessName}</p>
@@ -55,3 +58,4 @@ const OpportunityDetailHeader: React.FC<OpportunityDetailHeaderProps> = ({ oppor
 };
 
 export default OpportunityDetailHeader;
+
