@@ -136,7 +136,7 @@ const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, o
             <TextField label="Email" name="email" type="email" value={client.email} onChange={handleInputChange} error={Boolean(errors.email)} helperText={errors.email} fullWidth required />
 
             {localContacts.map((contact, index) => {
-                const isExistingContact = contacts.some(existingContact => 
+                const isExistingContact = contacts.some(existingContact =>
                     existingContact.firstName === contact.firstName &&
                     existingContact.lastName === contact.lastName &&
                     existingContact.phone === contact.phone &&
@@ -191,9 +191,8 @@ const UpdateClientForm: React.FC<UpdateClientFormProps> = ({ client, onChange, o
                             fullWidth
                             InputProps={{ readOnly: isExistingContact }}
                         />
-                        {!isExistingContact && (
-                            <Button color="secondary" onClick={() => removeContact(index)}>Remove Contact</Button>
-                        )}
+
+                        <Button color="secondary" onClick={() => removeContact(index)}>Remove Contact</Button>
                     </Box>
                 );
             })}

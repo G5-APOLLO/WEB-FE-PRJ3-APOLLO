@@ -98,3 +98,17 @@ export const createOpportunity = async (opportunity: Omit<IOpportunity, 'id'>): 
     throw new Error('Failed to create opportunity');
   }
 };
+
+export const fetchOpportunities = async (): Promise<{ id: number; businessName: string }[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/opportunities`);
+    // Mapea la respuesta para obtener solo el `id` y `businessName` de cada oportunidad
+    return response.data.map((opportunity: { id: number; businessName: string }) => ({
+      id: opportunity.id,
+      businessName: opportunity.businessName,
+    }));
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    throw new Error("Could not fetch opportunities");
+  }
+};

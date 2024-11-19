@@ -38,7 +38,7 @@ const CreateClientModal: React.FC<CreateClientModalProps> = ({ open, onClose, on
       try {
         const clients = await fetchClients(); // Asumimos que `fetchClients` obtiene todos los clientes
         setAvailableClients(clients);
-      } catch (error) {
+      } catch {
         toast.error("Error fetching available clients.");
       }
     };
