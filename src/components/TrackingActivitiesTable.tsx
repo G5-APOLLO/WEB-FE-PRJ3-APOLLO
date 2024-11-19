@@ -143,7 +143,7 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
         </Tooltip>
       )
     },
-    ...(showUpdateDelete
+    ...(!showUpdateDelete
       ? [
         {
           field: 'update',
@@ -184,7 +184,7 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
 
   return (
     <div className="container mx-auto mt-10">
-      {showUpdateDelete && <div className="flex justify-between mb-4">
+      {!showUpdateDelete && <div className="flex justify-between mb-4">
         <Button variant="contained" color="primary" onClick={handleOpenCreateModal}>
           Create Tracking
         </Button>

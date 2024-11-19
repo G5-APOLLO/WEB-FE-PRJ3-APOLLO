@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaUsers, FaChartLine, FaClipboardList, FaTachometerAlt, FaBars } from 'react-icons/fa';
+import { FaUsers, FaChartLine, FaTachometerAlt, FaBars } from 'react-icons/fa';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +21,6 @@ const Header = () => {
             </a>
             <a href="oportunidades" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaChartLine className="mr-2" /> Opportunities
-            </a>
-            <a href="seguimiento" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
-              <FaClipboardList className="mr-2" /> Tracking
             </a>
             <a href="#dashboard" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaTachometerAlt className="mr-2" /> Dashboard
@@ -48,9 +45,6 @@ const Header = () => {
           </a>
           <a href="oportunidades" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaChartLine className="mr-2" /> Opportunities
-          </a>
-          <a href="seguimiento" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
-            <FaClipboardList className="mr-2" /> Tracking
           </a>
           <a href="#dashboard" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaTachometerAlt className="mr-2" /> Dashboard
