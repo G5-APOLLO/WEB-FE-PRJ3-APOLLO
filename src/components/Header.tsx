@@ -16,13 +16,13 @@ const Header = () => {
           </div>
 
           <nav className="hidden lg:flex lg:space-x-14 lg:text-sm lg:font-semibold lg:text-xl lg:items-center">
-            <a href="clientes" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+            <a href="clients" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaUsers className="mr-2" /> Clients
             </a>
-            <a href="oportunidades" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+            <a href="oporttunities" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaChartLine className="mr-2" /> Opportunities
             </a>
-            <a href="#dashboard" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+            <a href="graphics" className="flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
               <FaTachometerAlt className="mr-2" /> Dashboard
             </a>
           </nav>
@@ -40,13 +40,13 @@ const Header = () => {
 
       {isOpen && (
         <div className="lg:hidden bg-gray-700 text-white py-4 space-y-4 px-6">
-          <a href="clientes" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+          <a href="clients" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaUsers className="mr-2" /> Clients
           </a>
-          <a href="oportunidades" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+          <a href="oporttunities" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaChartLine className="mr-2" /> Opportunities
           </a>
-          <a href="#dashboard" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
+          <a href="graphics" className="block flex items-center hover:text-gray-300 transition duration-200 ease-in-out">
             <FaTachometerAlt className="mr-2" /> Dashboard
           </a>
         </div>

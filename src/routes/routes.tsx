@@ -1,24 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import ClientTable  from "../components/ListClients";
+import Clients  from "../pages/Clients";
 import OpportunitiesPage from "../pages/Opportunities";
 import TrackingActivities from "../pages/TrackingActivities";
+import Graphics from "../pages/Graphics";
 export const router = createBrowserRouter(
   [
     {
       path: ``,
-      element: <ClientTable />,
+      element: <Clients />,
     },
     {
-      path: `/clientes`,
-      element: <ClientTable />,
+      path: `/clients`,
+      element: <Clients />,
     },
     {
-      path: `/oportunidades`,
+      path: `/oporttunities`,
       element: <OpportunitiesPage />,
     },
     {
-      path: `/seguimiento`,
+      path: `/tracking`,
       element: <TrackingActivities />,
+    },
+    {
+      path: `/graphics`,
+      element: <Graphics />,
     }
   ],
 );
