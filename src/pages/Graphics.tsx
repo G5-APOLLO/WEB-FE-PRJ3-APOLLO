@@ -1,6 +1,6 @@
 import React from "react";
 import EstimatedVSFinalized from "../components/EstimatedVSFinalizedGrapichs";
- 
+import OpportunitiesPieChart from '../components/OpportunitiesPieChart';
 const Graphics: React.FC = () => {
     return (
         <div>
@@ -8,6 +8,9 @@ const Graphics: React.FC = () => {
                 GRAPHICS
             </h1>
             <EstimatedVSFinalized />
+            
+            <OpportunitiesPieChart />
+    
         </div>
     );
 };
