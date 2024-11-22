@@ -53,7 +53,7 @@ const OpportunitiesPieChart: React.FC = () => {
   return (
     <div className="flex items-center justify-center">
       <div style={{ width: '400px', height: '400px' }}>
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">Opportunities by Status</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800 text-center">Opportunities by Status</h2>
         <Pie data={chartData} options={chartOptions} />
       </div>
     </div>
