@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import Chart from "chart.js/auto";
 import { ChartData } from "chart.js";
-import axios from "axios";
 import { Container, TextField, Autocomplete } from "@mui/material";
+import {clientsService, opportunitiesService} from '../services/userOportunities.service'
+import Spinner from './Spinner'
 
 export const EstimatedVSFinalized: React.FC = () => {
   const [clients, setClients] = useState<{ id: number; name: string }[]>([]);
   const [selectedClients, setSelectedClients] = useState<{ id: number; name: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [chartData, setChartData] = useState<ChartData<"bar">>({
     labels: [],
     datasets: [],
@@ -15,14 +17,13 @@ export const EstimatedVSFinalized: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const clientsResponse = await axios.get('https://web-fe-prj3-api-apollo.onrender.com/clients');
-        const opportunitiesResponse = await axios.get('https://web-fe-prj3-api-apollo.onrender.com/opportunities');
-
-        const clients = clientsResponse.data;
-        const opportunities = opportunitiesResponse.data;
-
+        const clients = await clientsService.getClients();
+        const opportunities = await opportunitiesService.getOpportunities();
+        
         setClients(clients);
+
 
         interface Client {
           id: number;
@@ -40,21 +41,28 @@ export const EstimatedVSFinalized: React.FC = () => {
           : clients;
 
         const data = filteredClients.map((client) => {
-          const clientOpportunities: Opportunity[] = opportunities.filter((opportunity: Opportunity) => opportunity.clientIds.includes(client.id));
-          const estimatedTotal = clientOpportunities.reduce((sum, opp) => sum + opp.estimatedValue, 0);
+          const clientOpportunities: Opportunity[] = opportunities.filter(
+            (opportunity: Opportunity) => opportunity.clientIds.includes(client.id)
+          );
+          const estimatedTotal = clientOpportunities.reduce(
+            (sum, opp) => sum + opp.estimatedValue, 
+            0
+          );
           const executedTotal = clientOpportunities
             .filter((opp) => opp.status === 'Finalized')
             .reduce((sum, opp) => sum + opp.estimatedValue, 0);
 
           return {
             client: client.name,
+            clientId: client.id, 
             estimatedTotal,
             executedTotal,
           };
         });
 
         setChartData({
-          labels: data.map((client) => client.client),
+
+          labels: data.map((client) => `${client.client} (${client.clientId})`),
           datasets: [
             {
               label: 'Estimated Total',
@@ -74,6 +82,8 @@ export const EstimatedVSFinalized: React.FC = () => {
         });
       } catch (error) {
         console.error('Error fetching data', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -138,10 +148,23 @@ export const EstimatedVSFinalized: React.FC = () => {
         getOptionLabel={(option) => option.name}
         value={selectedClients}
         onChange={(_, newValue) => setSelectedClients(newValue)}
-        renderInput={(params) => <TextField {...params} label="Clients" variant="outlined" />}
-        fullWidth
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Select Clients"
+          />
+        )}
+        getOptionKey={(option) => `${option.id}-${option.name}`}
+        isOptionEqualToValue={(option, value) => 
+          option.id === value.id && option.name === value.name
+        }
       />
+      {isLoading ? (
+        <Spinner />
+      ) : (
         <canvas id="myChart"></canvas>
+      )}
     </Container>
   );
 };
