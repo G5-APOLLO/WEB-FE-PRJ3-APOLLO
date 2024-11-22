@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Plugin } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useGetOpportunities } from '../hooks/useGetOpportunities';
 import Spinner from './Spinner';
 import ErrorComponent from './Error-component';
 
-// Register ChartJS plugins
-ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+// Register only the required global plugins
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const OpportunitiesByBusinessLineChart: React.FC = () => {
   const { data: opportunities, isLoading, isError } = useGetOpportunities();
@@ -84,10 +84,11 @@ const OpportunitiesByBusinessLineChart: React.FC = () => {
   return (
     <div className="flex items-center justify-center">
       <div style={{ width: '400px', height: '400px' }}>
-        <h2 className="text-2xl font-semibold mb-4 sm: mt-10 md:mt-0 text-gray-800 text-center">
+      <h2 className="text-2xl font-semibold mb-4 sm: mt-10 md:mt-0 text-gray-800 text-center">
           Opportunities by Business Line
         </h2>
-        <Pie data={chartData} options={chartOptions} />
+        {/* Typescript shenanigans */}
+        <Pie data={chartData} options={chartOptions} plugins={[ChartDataLabels as Plugin<'pie'>]} />
       </div>
     </div>
   );
