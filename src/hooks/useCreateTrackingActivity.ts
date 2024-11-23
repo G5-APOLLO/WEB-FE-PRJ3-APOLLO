@@ -1,4 +1,3 @@
-// hooks/useCreateTrackingActivity.ts
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { createTrackingActivity, fetchOpportunityByName } from '../services/trackingActivity.service';
