@@ -7,9 +7,17 @@ interface CreateTrackingActivityFormProps {
     onSave: (activity: TrackingActivity) => void;
     onCancel: () => void;
     isLoading: boolean;
+    isLoadingContacts: boolean;
+    clients: { id: number; name: string }[];
 }
 
-const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({ onSave, onCancel, isLoading}) => {
+const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({
+    onSave,
+    onCancel,
+    isLoading,
+    clients,
+    isLoadingContacts,
+}) => {
     const [activity, setActivity] = useState<TrackingActivity>({
         id: 0,
         opportunityId: 0,
@@ -18,17 +26,16 @@ const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({
         contactDate: '',
         clientContact: '',
         salesExecutive: '',
-        description: ''
+        description: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setActivity((prevActivity) => ({ ...prevActivity, [name]: value }));
+        setActivity(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSave = () => {
         if (
-            !activity.opportunityName ||
             !activity.contactType ||
             !activity.contactDate ||
             !activity.clientContact ||
@@ -44,14 +51,28 @@ const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({
     return (
         <form>
             <TextField
-                label="Opportunity Name"
-                name="opportunityName"
-                value={activity.opportunityName}
+                label="Client Contact"
+                name="clientContact"
+                value={activity.clientContact}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
+                select
                 required
-            />
+                disabled={isLoading || isLoadingContacts}
+            >
+                {isLoadingContacts ? (
+                    <MenuItem disabled>Cargando contactos...</MenuItem>
+                ) : clients.length > 0 ? (
+                    clients.map(client => (
+                        <MenuItem key={client.id} value={client.id}>
+                            {client.name}
+                        </MenuItem>
+                    ))
+                ) : (
+                    <MenuItem disabled>No hay contactos disponibles</MenuItem>
+                )}
+            </TextField>
             <TextField
                 label="Contact Type"
                 name="contactType"
@@ -75,15 +96,6 @@ const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({
                 margin="normal"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                required
-            />
-            <TextField
-                label="Client Contact"
-                name="clientContact"
-                value={activity.clientContact}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
                 required
             />
             <TextField

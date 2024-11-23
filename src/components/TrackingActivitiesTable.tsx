@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { useDeleteTrackingActivity } from '../hooks/useDeleteTrackingActivites';
 import { TrackingActivity } from '../types/TrackingActivity.type';
 import CreateTrackingActivityModal from './CreateTrackingModal';
+import { fetchClients } from '../services/createClient.service';
 
 interface TrackingActivitiesTableProps {
   opportunityId?: number;
@@ -23,6 +24,7 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
   const [selectedActivity, setSelectedActivity] = useState<TrackingActivity | null>(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [contactMap, setContactMap] = useState<Record<string, string>>({});
 
   const { mutate: deleteTrackingActivity } = useDeleteTrackingActivity(
     (deletedId) => {
@@ -48,6 +50,24 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
   const handleActivityCreated = (newActivity: TrackingActivity) => {
     setActivities((prevActivities) => [...prevActivities, newActivity]);
   };
+
+  const loadContacts = async () => {
+    try {
+      const clientData = await fetchClients();
+      const map: Record<string, string> = {};
+      clientData.forEach((client) => {
+        if (client.id !== null) {
+          map[client.id.toString()] = client.name;
+        }
+      });
+      setContactMap(map);
+    } catch (error) {
+      console.error('Error fetching contacts:', error);
+    }
+  };
+
+  loadContacts();
+
 
   const handleOpenUpdateModal = (activity: TrackingActivity) => {
     setSelectedActivity(activity);
@@ -117,11 +137,14 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
       field: 'clientContact',
       headerName: 'Client Contact',
       width: 200,
-      renderCell: (params) => (
-        <Tooltip title={params.value}>
-          <span>{params.value}</span>
-        </Tooltip>
-      )
+      renderCell: (params) => {
+        const contactName = contactMap[params.value] || params.value;
+        return (
+          <Tooltip title={contactName}>
+            <span>{contactName}</span>
+          </Tooltip>
+        );
+      },
     },
     {
       field: 'salesExecutive',
@@ -227,6 +250,7 @@ function TrackingActivitiesTable({ opportunityId, showUpdateDelete = true }: Tra
         open={isCreateModalOpen}
         onClose={handleCloseCreateModal}
         onCreateSuccess={handleActivityCreated}
+        opportunityId={opportunityId ?? 0}
       />
     </div>
   );
