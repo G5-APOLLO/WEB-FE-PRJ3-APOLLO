@@ -104,10 +104,20 @@ export const EstimatedVSFinalized: React.FC = () => {
           plugins: {
             legend: {
               position: 'top' as const,
+              labels: {
+                padding: 20,
+                font: {
+                  size: 16,
+                }
+              }
             },
             title: {
               display: true,
               text: 'Estimated vs Executed Total by Client',
+              font: {
+                size: 32,
+                weight: 'bold',
+              }
             },
           },
           scales: {

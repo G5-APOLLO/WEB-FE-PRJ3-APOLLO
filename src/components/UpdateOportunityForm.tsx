@@ -54,6 +54,8 @@ const OpportunityForm: React.FC<OpportunityFormProps> = ({ opportunity, onChange
         value={opportunity.description}
         onChange={handleChange}
         fullWidth
+        multiline
+        rows={3}
         margin="normal"
         required
       />

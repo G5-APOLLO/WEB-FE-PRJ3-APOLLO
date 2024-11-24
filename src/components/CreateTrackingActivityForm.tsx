@@ -113,6 +113,8 @@ const CreateTrackingActivityForm: React.FC<CreateTrackingActivityFormProps> = ({
                 value={activity.description}
                 onChange={handleChange}
                 fullWidth
+                multiline
+                rows={3}
                 margin="normal"
                 required
             />

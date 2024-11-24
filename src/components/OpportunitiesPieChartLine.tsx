@@ -39,16 +39,18 @@ const OpportunitiesByBusinessLineChart: React.FC = () => {
         label: 'Percentage of Opportunities by Business Line',
         data: percentages.map((item) => item.percentage),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)', // Red
-          'rgba(54, 162, 235, 0.5)', // Blue
-          'rgba(255, 206, 86, 0.5)', // Yellow
-          'rgba(75, 192, 192, 0.5)', // Teal
+          'rgba(201, 203, 207, 0.5)', // Gris claro
+          'rgba(54, 162, 235, 0.5)', // Azul claro
+          'rgba(153, 102, 255, 0.5)', // Morado suave
+          'rgba(75, 192, 192, 0.5)', // Verde azulado
+          
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)', // Red
-          'rgba(54, 162, 235, 1)', // Blue
-          'rgba(255, 206, 86, 1)', // Yellow
-          'rgba(75, 192, 192, 1)', // Teal
+          'rgba(201, 203, 207, 1)', // Gris claro
+          'rgba(54, 162, 235, 1)', // Azul claro
+          'rgba(153, 102, 255, 1)', // Morado suave
+          'rgba(75, 192, 192, 1)', // Verde azulado
+       
         ],
         borderWidth: 1,
       },
@@ -60,8 +62,15 @@ const OpportunitiesByBusinessLineChart: React.FC = () => {
       legend: {
         display: true,
         position: 'top' as const,
+        onClick: () => {},
       },
       tooltip: {
+        titleFont: {
+          size: 16, 
+        },
+        bodyFont: {
+          size: 14,
+        },
         callbacks: {
           label: function (tooltipItem: any) {
             const index = tooltipItem.dataIndex;
@@ -80,6 +89,7 @@ const OpportunitiesByBusinessLineChart: React.FC = () => {
     },
     maintainAspectRatio: false, // Adjust size
   };
+  
 
   return (
     <div className="flex items-center justify-center">
@@ -87,7 +97,6 @@ const OpportunitiesByBusinessLineChart: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4 sm: mt-10 md:mt-0 text-gray-800 text-center">
           Opportunities by Business Line
         </h2>
-        {/* Typescript shenanigans */}
         <Pie data={chartData} options={chartOptions} plugins={[ChartDataLabels as Plugin<'pie'>]} />
       </div>
     </div>

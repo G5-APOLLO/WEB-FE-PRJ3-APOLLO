@@ -21,7 +21,7 @@ const OpportunitiesPieChart: React.FC = () => {
     labels: Object.keys(statusCounts),
     datasets: [
       {
-        label: 'Opportunities by Status',
+        label: 'Count',
         data: Object.values(statusCounts),
         backgroundColor: [
           'rgba(54, 162, 235, 0.5)', // Azul claro
@@ -45,6 +45,14 @@ const OpportunitiesPieChart: React.FC = () => {
       legend: {
         display: true,
         position: 'top' as const,
+      },
+      tooltip: {
+        titleFont: {
+          size: 16, 
+        },
+        bodyFont: {
+          size: 14,
+        },
       },
     },
     maintainAspectRatio: false, // Permite ajustar el tamaño
