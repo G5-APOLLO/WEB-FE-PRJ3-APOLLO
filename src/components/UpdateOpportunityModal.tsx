@@ -33,7 +33,7 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
         } else {
           throw new Error('Opportunity ID is undefined');
         }
-      } catch (error) {
+      } catch {
         setError('Error loading opportunity data'); 
       } finally {
         setLoading(false);
@@ -70,7 +70,7 @@ const UpdateOpportunityModal: React.FC<UpdateOpportunityModalProps> = ({ open, o
         onOpportunityUpdated(updatedOpportunity);
         onClose();
       }
-    } catch (error) {
+    } catch {
       setError('Error updating opportunity');
     }
   };

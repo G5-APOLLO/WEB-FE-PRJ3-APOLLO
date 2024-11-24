@@ -5,9 +5,10 @@ import { TrackingActivity } from '../types/TrackingActivity.type';
 interface UpdateTrackingActivityFormProps {
   activity: TrackingActivity;
   onChange: (activity: TrackingActivity) => void;
+  clients: { id: number; name: string }[]; // Lista de contactos asociados
 }
 
-const UpdateTrackingActivityForm: React.FC<UpdateTrackingActivityFormProps> = ({ activity, onChange }) => {
+const UpdateTrackingActivityForm: React.FC<UpdateTrackingActivityFormProps> = ({ activity, onChange, clients }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onChange({ ...activity, [name]: value });
@@ -15,15 +16,6 @@ const UpdateTrackingActivityForm: React.FC<UpdateTrackingActivityFormProps> = ({
 
   return (
     <form>
-      <TextField
-        label="Opportunity Name"
-        name="opportunityName"
-        value={activity.opportunityName}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        required
-      />
       <TextField
         label="Contact Type"
         name="contactType"
@@ -56,8 +48,15 @@ const UpdateTrackingActivityForm: React.FC<UpdateTrackingActivityFormProps> = ({
         onChange={handleChange}
         fullWidth
         margin="normal"
+        select
         required
-      />
+      >
+        {clients.map(client => (
+          <MenuItem key={client.id} value={client.id.toString()}>
+            {client.name}
+          </MenuItem>
+        ))}
+      </TextField>
       <TextField
         label="Sales Executive"
         name="salesExecutive"
@@ -74,6 +73,8 @@ const UpdateTrackingActivityForm: React.FC<UpdateTrackingActivityFormProps> = ({
         onChange={handleChange}
         fullWidth
         margin="normal"
+        multiline
+        rows={3}
         required
       />
     </form>
