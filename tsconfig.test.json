@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "module": "ESNext", // Cambiar el módulo para que soporte import.meta
+    "jsx": "react-jsx", // Asegura el soporte de JSX
+    "types": ["jest", "node"] // Incluye tipos para Jest y Node.js
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*", "src/types/global.d.ts"],
+
+  "exclude": ["node_modules"]
+}
