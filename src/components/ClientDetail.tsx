@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import OpportunitiesTable from './ListOpportunities';
-import ClienteDetalleSuperior from './ClienteDetalleSuperior';
+import ClienteDetalleSuperior from './ClienDetailUpper';
 import TrackingActivitiesTable from './TrackingActivitiesTable';
 import ContactList from './ContactList'; // Importar el nuevo componente
 import { useClientData } from '../hooks/useClientData'; // Importar el hook

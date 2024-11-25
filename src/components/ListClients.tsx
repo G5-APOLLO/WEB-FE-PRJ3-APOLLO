@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Button, Modal, Box, IconButton } from "@mui/material";
 import { useGetClients } from "../hooks/useGetClients";
 import { useToggleActive } from "../hooks/useToggleActive";
-import ClienteDetalle from './ClienteDetalle';
+import ClienteDetalle from './ClientDetail';
 import CreateClientModal from './CreateClientModal';
 import Spinner from "./Spinner";
 import ErrorComponent from './Error-component';
